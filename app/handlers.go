@@ -2,81 +2,139 @@ package app
 
 import (
 	"encoding/json"
-	"github.com/gorilla/securecookie"
+	"fmt"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
+	"io/ioutil"
+	"log"
 	"net/http"
-	"time"
+	"os"
 )
 
-var cookieHandler = securecookie.New(
-	securecookie.GenerateRandomKey(64),
-	securecookie.GenerateRandomKey(32))
+var confOAuth2 *oauth2.Config
 
-func getUID(r *http.Request) (uid uint) {
-	if cookie, err := r.Cookie("session"); err == nil {
-		if err = cookieHandler.Decode("session", cookie.Value, &uid); err == nil {
-		}
+// var db *gorm.DB
+
+func init() {
+
+	var credOAuth2 CredentialOAuth2
+	var credMysql CredentialMysql
+
+	fileOAuth2, err := ioutil.ReadFile("./credOAuth2.json")
+	if err != nil {
+		log.Printf("File error: %v\n", err)
+		os.Exit(1)
 	}
-	return uid
+	json.Unmarshal(fileOAuth2, &credOAuth2)
+
+	confOAuth2 = &oauth2.Config{
+		ClientID:     credOAuth2.Cid,
+		ClientSecret: credOAuth2.Csecret,
+		RedirectURL:  "http://127.0.0.1:8080/options",
+		Scopes: []string{
+			"https://www.googleapis.com/auth/userinfo.email",
+		},
+		Endpoint: google.Endpoint,
+	}
+
+	fileMysql, err := ioutil.ReadFile("./credMysql.json")
+	if err != nil {
+		log.Printf("File error: %v\n", err)
+		os.Exit(1)
+	}
+	json.Unmarshal(fileMysql, &credMysql)
+	// confMysql, err := ReadConfig("/home/ekamwalia/go_projects/src/github.com/EkamWalia/ssh_system/config.json")
+
+	connectionString := fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
+		credMysql.DBUsername,
+		credMysql.DBPassword,
+		credMysql.DBName)
+
+	DB.db, err = gorm.Open("mysql", connectionString)
+	if err != nil {
+		log.Fatal("Could not open database : ", err)
+	}
+
+	// // hard coded admin for testing purposes
+	// var admin Admin
+
+	// admin = Admin{
+	// 	Name:  "Nishchay Parashar",
+	// 	Email: "nishchayparashar98@gmail.com",
+	// }
+
+	// db.Create(&admin)
 }
 
-func isLoggedIn(r *http.Request) (flag bool) {
-	uid := getUID(r)
-	if uid != 0 {
-		flag = true
-	} else {
-		flag = false
+func Index(w http.ResponseWriter, r *http.Request) {
+
+	response := &Response{
+		true,
+		"DAMN kid!",
 	}
-	return flag
+
+	json, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(json)
 }
 
-func setSession(uid uint, w http.ResponseWriter) {
-	// IMO here would be the code to
-	// create new entry in session table in db
-	/*var session Session
-	session = Session{UserID: uid, LoginTimeStamp: time.Now()}
-	db.Create(&session)*/
-
-	if encoded, err := cookieHandler.Encode("session", uid); err == nil {
-		cookie := &http.Cookie{
-			Name:    "session",
-			Value:   encoded,
-			Path:    "/",
-			Expires: time.Now().Add(12 * time.Hour),
-		}
-		http.SetCookie(w, cookie)
-	}
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, confOAuth2.AuthCodeURL("randomstate"), 302)
 }
 
-func clearSession(w http.ResponseWriter) {
-	// IMO here would be the code to
-	// delete the session from the sessions table in db
-	cookie := &http.Cookie{
-		Name:   "session",
-		Value:  "",
-		Path:   "/",
-		MaxAge: -1,
+func Options(w http.ResponseWriter, r *http.Request) {
+
+	tok, err := confOAuth2.Exchange(oauth2.NoContext, r.FormValue("code"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-	http.SetCookie(w, cookie)
+
+	check, err := http.Get("https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=" + tok.AccessToken)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer check.Body.Close()
+
+	client := confOAuth2.Client(oauth2.NoContext, tok)
+	info, err := client.Get("https://www.googleapis.com/oauth2/v3/userinfo")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	defer info.Body.Close()
+	data, _ := ioutil.ReadAll(info.Body)
+
+	var googTok GoogleToken
+
+	json.Unmarshal(data, &googTok)
+
+	SetCookieHandler(&googTok, w)
+
+	log.Println("Email body: ", string(data))
+	fmt.Fprintf(w, "%s", string(data))
 }
 
-func loginHandler(w http.ResponseWriter, r *http.Request) {
+func MakeAccessRequest(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "POST" {
 		return
 	}
 
 	type Receive struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-
-	type Response struct {
-		Success bool   `json:"success"`
+		SshKey  string `json:"ssh_key"`
 		Message string `json:"message"`
 	}
 
-	/**** check credentials ****/
-	var user User
+	var response Response
 
 	decoder := json.NewDecoder(r.Body)
 	var receive Receive
@@ -85,53 +143,39 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	// check for email
-	notFoundErr := db.Debug().Where("email = ?", receive.Email).First(&user).Error
+	googTok := ReadCookieHandler(w, r)
 
-	if notFoundErr != nil {
-		//json for incorrect email or pw
-		response := &Response{
+	if googTok.Email == "" {
+		response = Response{
 			false,
-			"Incorrect email or password",
+			"User not authenticated",
+		}
+	} else {
+
+		var accessRequest AccessRequest
+
+		notFoundErr := DB.db.Debug().Where("email = ?", googTok.Email).First(&accessRequest).Error
+		if notFoundErr != nil {
+			accessRequest = AccessRequest{
+				Name:    googTok.Name,
+				Email:   googTok.Email,
+				Message: receive.Message,
+			}
+			// create a file with maybe the name as request.name+request.ID and content as recieve.SshKey
+
+			DB.db.Create(&accessRequest)
+
+			response = Response{
+				true,
+				"New request sent",
+			}
+		} else {
+			response = Response{
+				false,
+				"Request already exists",
+			}
 		}
 
-		json, err := json.Marshal(response)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json)
-		return
-	}
-
-	// check for password
-	if user.Password != receive.Password {
-		//json for incorrect email or pw
-		response := &Response{
-			false,
-			"Incorrect email or password",
-		}
-
-		json, err := json.Marshal(response)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json)
-		return
-
-	}
-
-	// credentials checked
-	setSession(user.ID, w)
-
-	response := &Response{
-		true,
-		"User logged in",
 	}
 
 	json, err := json.Marshal(response)
@@ -142,37 +186,45 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json)
+
 }
 
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
+func MakeAdminRequest(w http.ResponseWriter, r *http.Request) {
 
-	type Response struct {
-		Success bool   `json:"success"`
-		Message string `json:"message"`
-	}
+	var response Response
 
-	if !(isLoggedIn(r)) {
+	googTok := ReadCookieHandler(w, r)
 
-		response := &Response{
+	if googTok.Email == "" {
+		response = Response{
 			false,
-			"Unautorized, login required",
+			"User not authenticated",
+		}
+	} else {
+
+		var adminRequest AdminRequest
+
+		notFoundErr := DB.db.Debug().Where("email = ?", googTok.Email).First(&adminRequest).Error
+		if notFoundErr != nil {
+			adminRequest = AdminRequest{
+				Name:  googTok.Name,
+				Email: googTok.Email,
+			}
+
+			DB.db.Create(&adminRequest)
+
+			response = Response{
+				true,
+				"New request sent",
+			}
+		} else {
+			response = Response{
+				false,
+				"Request already exists",
+			}
 		}
 
-		json, err := json.Marshal(response)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(json)
-
-		return
 	}
-
-	clearSession(w)
-
-	response := &Response{true, "User logged out"}
 
 	json, err := json.Marshal(response)
 	if err != nil {
@@ -182,4 +234,5 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(json)
+
 }
