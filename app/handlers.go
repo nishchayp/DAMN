@@ -15,8 +15,6 @@ import (
 
 var confOAuth2 *oauth2.Config
 
-// var db *gorm.DB
-
 func init() {
 
 	var credOAuth2 CredentialOAuth2
@@ -45,7 +43,6 @@ func init() {
 		os.Exit(1)
 	}
 	json.Unmarshal(fileMysql, &credMysql)
-	// confMysql, err := ReadConfig("/home/ekamwalia/go_projects/src/github.com/EkamWalia/ssh_system/config.json")
 
 	connectionString := fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
 		credMysql.DBUsername,
@@ -57,15 +54,6 @@ func init() {
 		log.Fatal("Could not open database : ", err)
 	}
 
-	// // hard coded admin for testing purposes
-	// var admin Admin
-
-	// admin = Admin{
-	// 	Name:  "Nishchay Parashar",
-	// 	Email: "nishchayparashar98@gmail.com",
-	// }
-
-	// db.Create(&admin)
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
