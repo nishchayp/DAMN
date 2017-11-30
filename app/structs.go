@@ -25,18 +25,6 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-// type GoogleToken struct {
-// 	Azp           string `json:"azp"`
-// 	Aud           string `json:"aud"`
-// 	Sub           string `json:"sub"`
-// 	Scope         string `json:"scope"`
-// 	Exp           string `json:"exp"`
-// 	ExpiresIn     string `json:"expires_in"`
-// 	Email         string `json:"email"`
-// 	EmailVerified string `json:"email_verified"`
-// 	AccessType    string `json:"access_type"`
-// }
-
 type GoogleToken struct {
 	Sub           string `json:"sub"`
 	Name          string `json:"name"`

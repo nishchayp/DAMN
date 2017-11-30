@@ -28,9 +28,7 @@ func ReadCookieHandler(w http.ResponseWriter, r *http.Request) (googTok GoogleTo
 	if cookie, err := r.Cookie("googCookie"); err == nil {
 		if err = cookieHandler.Decode("googCookie", cookie.Value, &googTok); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
-			// return
 		}
 	}
-	// fmt.Println(googTok.Email)
 	return googTok
 }

@@ -10,14 +10,6 @@ var DB Database
 
 func Run() {
 
-	// var err error
-
-	// db, err = gorm.Open("sqlite3", "test.db")
-
-	// if err != nil {
-	// panic("Database not created , error ")
-	// }
-
 	defer DB.db.Close()
 
 	DB.db.AutoMigrate(&AccessRequest{})
