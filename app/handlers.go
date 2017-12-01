@@ -1,6 +1,8 @@
 package app
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"github.com/jinzhu/gorm"
@@ -14,6 +16,8 @@ import (
 )
 
 var confOAuth2 *oauth2.Config
+
+var state string
 
 func init() {
 
@@ -54,6 +58,14 @@ func init() {
 		log.Fatal("Could not open database : ", err)
 	}
 
+	state = randState()
+
+}
+
+func randState() string {
+	b := make([]byte, 32)
+	rand.Read(b)
+	return base64.StdEncoding.EncodeToString(b)
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
@@ -74,10 +86,15 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, confOAuth2.AuthCodeURL("randomstate"), 302)
+	http.Redirect(w, r, confOAuth2.AuthCodeURL(state), 302)
 }
 
 func Options(w http.ResponseWriter, r *http.Request) {
+
+	if r.FormValue("state") != state {
+		http.Error(w, "possibly malacious/fake callback redirect", http.StatusBadRequest)
+		return
+	}
 
 	tok, err := confOAuth2.Exchange(oauth2.NoContext, r.FormValue("code"))
 	if err != nil {
