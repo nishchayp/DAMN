@@ -1,20 +1,20 @@
 package app
 
 type AccessRequest struct {
-	AccessRequestID uint   `gorm:"AUTO_INCREMENT"`
-	Name            string `gorm:"not null"`
-	Email           string `gorm:"not null"`
-	Message         string `gorm:"not null"`
+	AccessRequestID uint   `json:"access_request_id" sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	Name            string `json:"name" sql:"not null"`
+	Email           string `json:"email" sql:"not null;unique"`
+	Message         string `json:"message" sql:"not null"`
 }
 
 type AdminRequest struct {
-	AdminRequestID uint   `gorm:"AUTO_INCREMENT"`
-	Name           string `gorm:"not null"`
-	Email          string `gorm:"not null"`
+	AdminRequestID uint   `json:"admin_request_id" sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	Name           string `json:"name" sql:"not null"`
+	Email          string `json:"email" sql:"not null;unique"`
 }
 
 type Admin struct {
-	AdminID uint   `gorm:"AUTO_INCREMENT"`
-	Name    string `gorm:"not null"`
-	Email   string `gorm:"not null"`
+	AdminID uint   `json:"admin_id" sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	Name    string `json:"name" sql:"not null"`
+	Email   string `json:"email" sql:"not null;unique"`
 }

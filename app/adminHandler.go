@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
 
@@ -20,7 +21,7 @@ func IsAdmin(w http.ResponseWriter, r *http.Request) (isAdminFlag bool) {
 	}
 }
 
-func LoginAdmin(w http.ResponseWriter, r *http.Request) {
+func LoginAdmin(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	var response Response
 
