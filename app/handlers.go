@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/julienschmidt/httprouter"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"io/ioutil"
@@ -56,7 +57,7 @@ func init() {
 
 }
 
-func Index(w http.ResponseWriter, r *http.Request) {
+func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	response := &Response{
 		true,
@@ -73,11 +74,11 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	w.Write(json)
 }
 
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
+func LoginHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	http.Redirect(w, r, confOAuth2.AuthCodeURL("randomstate"), 302)
 }
 
-func Options(w http.ResponseWriter, r *http.Request) {
+func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	tok, err := confOAuth2.Exchange(oauth2.NoContext, r.FormValue("code"))
 	if err != nil {
@@ -111,11 +112,7 @@ func Options(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", string(data))
 }
 
-func MakeAccessRequest(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method != "POST" {
-		return
-	}
+func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	type Receive struct {
 		SshKey  string `json:"ssh_key"`
@@ -177,7 +174,7 @@ func MakeAccessRequest(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func MakeAdminRequest(w http.ResponseWriter, r *http.Request) {
+func MakeAdminRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	var response Response
 
