@@ -18,3 +18,10 @@ type Admin struct {
 	Name    string `json:"name" sql:"not null"`
 	Email   string `json:"email" sql:"not null;unique"`
 }
+
+type Access struct {
+	AccessID uint   `json:"access_id" sql:"AUTO_INCREMENT" gorm:"primary_key"`
+	Name     string `json:"name" sql:"not null"`
+	Email    string `json:"email" sql:"not null"`
+	IP       string `json:"ip" sql:"not null"`
+}
