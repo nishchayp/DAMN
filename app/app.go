@@ -17,6 +17,7 @@ func Run() {
 	DB.db.AutoMigrate(&AccessRequest{})
 	DB.db.AutoMigrate(&AdminRequest{})
 	DB.db.AutoMigrate(&Admin{})
+	DB.db.AutoMigrate(&Access{})
 
 	router := httprouter.New()
 
@@ -25,7 +26,15 @@ func Run() {
 	router.GET("/options", Options)
 	router.POST("/makeAccessRequest", MakeAccessRequest)
 	router.GET("/makeAdminRequest", MakeAdminRequest)
-	router.GET("/loginAdmin", LoginAdmin)
+	router.GET("/admin", AdminIndex)
+
+	router.GET("/admin/acceptAdminRequest/:id", AcceptAdminRequest)
+	router.GET("/admin/rejectAdminRequest/:id", RejectAdminRequest)
+	router.GET("/admin/revokeAdminPrivilege/:id", RevokeAdminPrivilege)
+
+	router.POST("/admin/acceptAccessRequest/:id", AcceptAccessRequest)
+	router.GET("/admin/rejectAccessRequest/:id", RejectAccessRequest)
+	router.GET("/admin/revokeAccessPrivilege/:id", RevokeAccessPrivilege)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
