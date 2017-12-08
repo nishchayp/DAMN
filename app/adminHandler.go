@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"github.com/codeskyblue/go-sh"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
@@ -195,10 +196,16 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 			}
 		} else {
 			DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request)
+
+			//---->copy script goes here
+			//---->needs to be tested
+			sh.Command("./scripts/copy_key_to_server.sh", receive.IP, access_request.SshKey).Run()
+
 			access = Access{
-				Name:  access_request.Name,
-				Email: access_request.Email,
-				IP:    receive.IP,
+				Name:   access_request.Name,
+				Email:  access_request.Email,
+				IP:     receive.IP,
+				SshKey: access_request.SshKey,
 			}
 			DB.db.Create(&access)
 			DB.db.Delete(&access_request)
@@ -279,6 +286,11 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 			}
 		} else {
 			DB.db.Debug().Where("access_id = ?", ps.ByName("id")).Delete(&access)
+
+			//---->remove script goes here
+
+			sh.Command("./scripts/remove_key_from_server.sh", access.IP, access.SshKey).Run()
+
 			response = Response{
 				true,
 				"Access privileges successfully revoked",
