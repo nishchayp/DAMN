@@ -71,6 +71,8 @@ func randState() string {
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
+	// sh.Command("./scripts/test.sh", "1.1.1.1", "ssh key").Run()
+
 	response := &Response{
 		true,
 		"DAMN kid!",
@@ -162,8 +164,8 @@ func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 				Name:    googTok.Name,
 				Email:   googTok.Email,
 				Message: receive.Message,
+				SshKey:  receive.SshKey,
 			}
-			// create a file with maybe the name as request.name+request.ID and content as recieve.SshKey
 
 			DB.db.Create(&accessRequest)
 
