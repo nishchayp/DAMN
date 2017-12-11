@@ -24,6 +24,7 @@ func Run() {
 	router.ServeFiles("/static/*filepath", http.Dir("./public"))
 	router.GET("/", Index)
 	router.GET("/login", LoginHandler)
+	router.GET("/logout", LogoutHandler)
 	router.GET("/options", Options)
 	router.POST("/makeAccessRequest", MakeAccessRequest)
 	router.GET("/makeAdminRequest", MakeAdminRequest)
@@ -42,5 +43,7 @@ func Run() {
 	router.GET("/admins", AdminsHandler)
 	router.GET("/adminrequests", AdminRequestsHandler)
 
+	log.Println("Server listening at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
+
 }
