@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">
+	<title>Admin</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="icon" href="./images/logo-white.png">
+	<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./css/admin.css">
+</head>
+<body id="admin-body">
+
+	<div id="burger-container">
+       <div id="burger">
+         <span>&nbsp;</span>
+         <span>&nbsp;</span>
+         <span>&nbsp;</span>
+       </div>
+    </div>
+
+	<nav class="nav">
+		<div id="nav-accesses" class="nav-links active"><b>Accesses</b></div>
+		<div id="nav-access-requests" class="nav-links"><b>Access Requests</b></div>
+		<div id="nav-admins" class="nav-links"><b>Admins</b></div>
+		<div id="nav-admin-requests" class="nav-links"><b>Admin Requests</b></div>
+		<div class="logout-container">
+			<a class="logout-button" href="/logout">Logout</a>
+		</div>
+	</nav>
+
+	<div class="heading">Accesses</div>
+
+	<div id="users"></div>
+
+	<!-- Modals - Start -->
+
+	<div id="user-modal-background" class="modal-background">
+		<div id="user-modal" class="modal">
+			<div class="close-modal-container">
+				<div class="close-modal">&times;</div>
+			</div>
+			<div class="modal-content">
+				<div id="user-details">
+					<table>
+						<tr>
+							<td>Name</td><td><span id="modal-name"></span></td>
+						</tr>
+						<tr>
+							<td>Email</td><td><span id="modal-email"></span></td>
+						</tr>
+						<tr>
+							<td>SSH Key</td><td><div id="modal-ssh-key"></div></td>
+						</tr>
+						<tr>
+							<td id="modal-ip-message-title"></td><td><span id="modal-ip-message"></span></td>
+						</tr>
+					</table>
+				</div>
+				<div class="modal-buttons">
+					<button class="modal-btn" id="btn-accept">Accept</button>
+					<button class="modal-btn" id="btn-reject">Reject</button>
+					<button class="modal-btn" id="btn-revoke">Revoke</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modals - End -->
+
+	<div id="snackbar"></div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/clipboard@1/dist/clipboard.min.js"></script>
+	<script type="text/javascript" src="./js/admin.js"></script>
+</body>
+</html>

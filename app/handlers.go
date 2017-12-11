@@ -127,8 +127,14 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	SetCookieHandler(&googTok, w)
 
+	var admin Admin
+
 	log.Println("Email body: ", string(data))
-	fmt.Fprintf(w, "%s", string(data))
+	if DB.db.Debug().Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
+		fmt.Fprintf(w, "%s", string(data))
+	} else {
+		http.Redirect(w, r, "/static/admin.html", 301)
+	}
 }
 
 func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
