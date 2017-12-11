@@ -21,6 +21,7 @@ func Run() {
 
 	router := httprouter.New()
 
+	router.ServeFiles("/static/*filepath", http.Dir("./public"))
 	router.GET("/", Index)
 	router.GET("/login", LoginHandler)
 	router.GET("/options", Options)
@@ -35,6 +36,11 @@ func Run() {
 	router.POST("/admin/acceptAccessRequest/:id", AcceptAccessRequest)
 	router.GET("/admin/rejectAccessRequest/:id", RejectAccessRequest)
 	router.GET("/admin/revokeAccessPrivilege/:id", RevokeAccessPrivilege)
+
+	router.GET("/accesses", AccessesHandler)
+	router.GET("/accessrequests", AccessRequestsHandler)
+	router.GET("/admins", AdminsHandler)
+	router.GET("/adminrequests", AdminRequestsHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
