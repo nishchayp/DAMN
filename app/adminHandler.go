@@ -2,7 +2,6 @@ package app
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/codeskyblue/go-sh"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/julienschmidt/httprouter"
@@ -181,7 +180,6 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	var response Response
 	var access_request AccessRequest
 	var access Access
-	fmt.Print(r.Body)
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&receive)
