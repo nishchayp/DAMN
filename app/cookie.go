@@ -32,3 +32,14 @@ func ReadCookieHandler(w http.ResponseWriter, r *http.Request) (googTok GoogleTo
 	}
 	return googTok
 }
+
+func ClearCookie(w http.ResponseWriter) {
+
+	cookie := &http.Cookie{
+		Name:   "googCookie",
+		Value:  "",
+		Path:   "/",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, cookie)
+}
