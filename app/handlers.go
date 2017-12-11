@@ -71,8 +71,6 @@ func randState() string {
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
-	// sh.Command("./scripts/test.sh", "1.1.1.1", "ssh key").Run()
-
 	response := &Response{
 		true,
 		"DAMN kid!",
@@ -129,6 +127,27 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	log.Println("Email body: ", string(data))
 	fmt.Fprintf(w, "%s", string(data))
+}
+
+func LogoutHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+
+	var response Response
+
+	ClearCookie(w)
+
+	response = Response{
+		true,
+		"User logged out",
+	}
+
+	json, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(json)
 }
 
 func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
