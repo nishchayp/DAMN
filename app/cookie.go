@@ -33,7 +33,7 @@ func ReadCookieHandler(w http.ResponseWriter, r *http.Request) (googTok GoogleTo
 	return googTok
 }
 
-func ClearCookie(w http.ResponseWriter) {
+func ClearCookieHandler(w http.ResponseWriter) {
 
 	cookie := &http.Cookie{
 		Name:   "googCookie",
