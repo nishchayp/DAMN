@@ -1,0 +1,11 @@
+<div class="data-item" *ngFor="let admin of admins; let i = index">
+  <div class="data">{{ admin.name }}</div>
+  <div class="data">{{ admin.email }}</div>
+  <div class="items-right">
+  	<div class="data-option-btn">
+  	  <button (click)="revoke(admin.admin_id, i)">Revoke</button>
+  	</div>
+  </div>
+</div>
+<div class="no-content" *ngIf="!!admins && !admins.length">Nothing to show</div>
+<div class="no-content" *ngIf="!admins">Loading</div>

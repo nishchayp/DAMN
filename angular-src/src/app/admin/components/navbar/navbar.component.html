@@ -1,0 +1,16 @@
+<div [class.open]="navOpen" (click)="toggleNav()" id="burger-container">
+  <div id="burger">
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+    <span>&nbsp;</span>
+  </div>
+</div>
+<nav [class.navClosed]="!navOpen" class="nav">
+	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/accesses']">Accesses</div>
+	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/accessrequests']">Access Requests</div>
+	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/admins']">Admins</div>
+	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/adminrequests']">Admin Requests</div>
+	<div (click)="closeNav()" class="logout-container">
+		<a href="/logout" class="logout-button">Logout</a>
+	</div>
+</nav>

@@ -1,0 +1,9 @@
+<div class="data-item" *ngFor="let accessRequest of accessRequests; let i = index">
+  <div class="data">{{ accessRequest?.name }}</div>
+  <div class="data">{{ accessRequest?.message }}</div>
+  <div class="items-right">
+    <div class="view-btn" (click)="view(accessRequest, i)">View</div>
+  </div>
+</div>
+<div class="no-content" *ngIf="!!accessRequests && !accessRequests.length">Nothing to show</div>
+<div class="no-content" *ngIf="!accessRequests">Loading</div>
