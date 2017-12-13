@@ -1,0 +1,114 @@
+#burger-container {
+	display: none;
+	position: absolute;
+	left: 20px;
+	top: 30px;
+}
+
+#burger {
+	cursor: pointer;
+	display: block;
+}
+
+#burger span {
+	background: #fff;
+	display: block;
+	width: 27px;
+	height: 3px;
+	margin-bottom: 6px;
+	position: relative;
+	top: 0;
+	transition: all ease-in-out 0.4s;
+	border-radius: 1px;
+}
+
+#burger-container.open span:nth-child(2) {
+	width: 0;
+	opacity: 0;
+}
+
+#burger-container.open span:nth-child(3) {
+	transform: rotate(45deg);
+	top: -9px;
+}
+
+#burger-container.open span:nth-child(1) {
+	transform: rotate(-45deg);
+	top: 9px;
+}
+
+@media only screen and (max-width: 985px) {
+
+	#burger-container {
+		display: block;
+	}
+
+}
+
+.nav {
+	display: flex;
+	justify-content: flex-start;
+	padding: 45px 45px 0 10%;
+	margin: 0 auto 50px;
+}
+
+.nav-links {
+	padding: 10px 30px;
+	cursor: pointer;
+	color: #aaa;
+	border-bottom: solid #333;
+	font-size: 1.15rem;
+	margin-right: 5px;
+	font-weight: bold;
+}
+
+.active {
+	border-bottom: solid #aaa;
+}
+
+.logout-container {
+	margin-left: auto;
+}
+
+.logout-button {
+	padding: 10px 30px;
+	border-style: none;
+	background-color: #aaa;
+	color: #333;
+	font-size: 1.1rem;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+@media only screen and (max-width: 985px) {
+
+	.nav {
+		flex-direction: column;
+		justify-content: flex-end;
+		border-bottom: solid thin #333;
+		background-color: #333;
+		padding: 0 10%;
+		margin: 0;
+		overflow: hidden;
+		height: 330px;
+		transition: height 0.8s;
+	}
+
+	.navClosed {
+		height: 0;
+		overflow: hidden;
+		transition: height 0.8s;
+	}
+
+	.logout-button {
+		font-size: 1.15rem;
+		font-weight: bolder;
+		width: 125px;
+	}
+
+	.logout-container {
+		padding: 20px 30px 30px;
+		width: 100%;
+	}
+
+}
