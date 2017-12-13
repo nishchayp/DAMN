@@ -123,9 +123,17 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	json.Unmarshal(data, &googTok)
 
+	// check if user has a verified gmail account
+	if googTok.EmailVerified == false {
+		http.Redirect(w, r, "https://myaccount.google.com/", 302)
+		return
+	}
+
 	SetCookieHandler(&googTok, w)
 
 	log.Println("Email body: ", string(data))
+
+	// ----> below line is just for testing purposes
 	fmt.Fprintf(w, "%s", string(data))
 }
 
@@ -133,7 +141,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 
 	var response Response
 
-	ClearCookie(w)
+	ClearCookieHandler(w)
 
 	response = Response{
 		true,
