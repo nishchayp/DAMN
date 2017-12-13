@@ -1,0 +1,45 @@
+<div [class.modal-active]="modalActive" class="modal-background">
+  <div class="modal">
+    <div class="close-modal-container" (click)="closeModal()">
+      <div class="close-modal">&times;</div>
+    </div>
+    <div class="modal-content">
+      <div class="modal-data">
+        <table>
+          <tr>
+            <td>Name</td><td><span>{{ modalData?.name }}</span></td>
+          </tr>
+          <tr>
+            <td>Email</td><td><span>{{ modalData?.email }}</span></td>
+          </tr>
+          <tr>
+            <td>SSH Key</td>
+            <td>
+              <div>
+              <button ngxClipboard  [cbContent]="modalData?.ssh_key" class="copy-btn">Copy key</button> for {{ modalData?.ssh_key.split(' ')[2] }}
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="modalData?.modalfor === 'access'">
+            <td>IP</td><td><span>{{ modalData?.ip }}</span></td>
+          </tr>
+          <tr *ngIf="modalData?.modalfor === 'access_request'">
+            <td>Message</td><td><span>{{ modalData?.message }}</span></td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-buttons">
+        <div *ngIf="modalData?.modalfor === 'access'">
+          <button class="modal-btn" (click)="revoke(modalData?.id, modalData?.index)">Revoke</button>
+        </div>
+        <div *ngIf="modalData?.modalfor === 'access_request'">
+          <form class="ip-form" [formGroup]="ipForm" (submit)="accept(ipForm.value, modalData?.id, modalData?.index)">
+            <input [class.right-input]="ipValid" [class.wrong-input]="!ipValid && ip.length > 0" class="modal-input" name="ip" formControlName="ip" (ngModelChange)="ipInputChanged(value = $event)" placeholder="IP Address" [(ngModel)]="ip" />
+            <button class="modal-btn" type="submit">Accept</button>
+          </form>      
+          <button class="modal-btn" (click)="reject(modalData?.id, modalData?.index)">Reject</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
