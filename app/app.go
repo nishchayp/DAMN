@@ -21,7 +21,7 @@ func Run() {
 
 	router := httprouter.New()
 
-	router.ServeFiles("/static/*filepath", http.Dir("./public"))
+	router.ServeFiles("/static/*filepath", http.Dir("./dist/admin"))
 	router.GET("/", Index)
 	router.GET("/login", LoginHandler)
 	router.GET("/logout", LogoutHandler)
