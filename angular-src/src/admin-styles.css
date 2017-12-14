@@ -1,0 +1,23 @@
+* {
+	box-sizing: border-box;
+	outline: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+body {
+	font-family: 'Quicksand', sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #222;
+}
+
+button, table {
+	font-family: 'Quicksand', sans-serif;
+}
+
+button {
+	cursor: pointer;
+}

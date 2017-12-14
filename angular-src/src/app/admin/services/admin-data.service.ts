@@ -35,11 +35,13 @@ export class AdminDataService {
   getAccesses() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/accesses', { headers: headers, withCredentials: true })
+    return this.http.get('http://127.0.0.1:8080/admin/getAccesses', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.accesses = JSON.parse(data.message);
         this.sendInfo();
+      } else {
+        this.sendAlertDanger(data.message);
       }
     });
   }
@@ -47,11 +49,13 @@ export class AdminDataService {
   getAdmins() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/admins', { headers: headers, withCredentials: true })
+    return this.http.get('http://127.0.0.1:8080/admin/getAdmins', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.admins = JSON.parse(data.message);
         this.sendInfo();
+      } else {
+        this.sendAlertDanger(data.message);
       }
     });
   }
@@ -59,11 +63,13 @@ export class AdminDataService {
   getAccessRequests() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/accessRequests', { headers: headers, withCredentials: true })
+    return this.http.get('http://127.0.0.1:8080/admin/getAccessRequests', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.accessRequests = JSON.parse(data.message);
         this.sendInfo();
+      } else {
+        this.sendAlertDanger(data.message);
       }
     });
   }
@@ -71,11 +77,13 @@ export class AdminDataService {
   getAdminRequests() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/adminRequests', { headers: headers, withCredentials: true })
+    return this.http.get('http://127.0.0.1:8080/admin/getAdminRequests', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.adminRequests = JSON.parse(data.message);
         this.sendInfo();
+      } else {
+        this.sendAlertDanger(data.message);
       }
     });
   }

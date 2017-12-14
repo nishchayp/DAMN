@@ -5,6 +5,7 @@ import (
 	"github.com/codeskyblue/go-sh"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/julienschmidt/httprouter"
+	"html/template"
 	"net/http"
 )
 
@@ -23,28 +24,13 @@ func IsAdmin(w http.ResponseWriter, r *http.Request) (isAdminFlag bool) {
 
 func AdminIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
-	var response Response
-
 	if IsAdmin(w, r) != true {
-		response = Response{
-			false,
-			"User not admin",
-		}
+		http.Redirect(w, r, "/", 302)
 	} else {
-		response = Response{
-			true,
-			"A restricted admin route",
-		}
+		var adminTemplate *template.Template
+		adminTemplate = template.Must(template.ParseGlob("templates/admin.html"))
+		adminTemplate.Execute(w, nil)
 	}
-
-	json, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
 
 }
 

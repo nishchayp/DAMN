@@ -884,11 +884,14 @@ var AdminDataService = /** @class */ (function () {
         var _this = this;
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
         headers.append('Content-type', 'application/json');
-        return this.http.get('http://127.0.0.1:8080/accesses', { headers: headers, withCredentials: true })
+        return this.http.get('http://127.0.0.1:8080/admin/getAccesses', { headers: headers, withCredentials: true })
             .map(function (res) { return res.json(); }).subscribe(function (data) {
             if (data.success) {
                 _this.accesses = JSON.parse(data.message);
                 _this.sendInfo();
+            }
+            else {
+                _this.sendAlertDanger(data.message);
             }
         });
     };
@@ -896,11 +899,14 @@ var AdminDataService = /** @class */ (function () {
         var _this = this;
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
         headers.append('Content-type', 'application/json');
-        return this.http.get('http://127.0.0.1:8080/admins', { headers: headers, withCredentials: true })
+        return this.http.get('http://127.0.0.1:8080/admin/getAdmins', { headers: headers, withCredentials: true })
             .map(function (res) { return res.json(); }).subscribe(function (data) {
             if (data.success) {
                 _this.admins = JSON.parse(data.message);
                 _this.sendInfo();
+            }
+            else {
+                _this.sendAlertDanger(data.message);
             }
         });
     };
@@ -908,11 +914,14 @@ var AdminDataService = /** @class */ (function () {
         var _this = this;
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
         headers.append('Content-type', 'application/json');
-        return this.http.get('http://127.0.0.1:8080/accessRequests', { headers: headers, withCredentials: true })
+        return this.http.get('http://127.0.0.1:8080/admin/getAccessRequests', { headers: headers, withCredentials: true })
             .map(function (res) { return res.json(); }).subscribe(function (data) {
             if (data.success) {
                 _this.accessRequests = JSON.parse(data.message);
                 _this.sendInfo();
+            }
+            else {
+                _this.sendAlertDanger(data.message);
             }
         });
     };
@@ -920,11 +929,14 @@ var AdminDataService = /** @class */ (function () {
         var _this = this;
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
         headers.append('Content-type', 'application/json');
-        return this.http.get('http://127.0.0.1:8080/adminRequests', { headers: headers, withCredentials: true })
+        return this.http.get('http://127.0.0.1:8080/admin/getAdminRequests', { headers: headers, withCredentials: true })
             .map(function (res) { return res.json(); }).subscribe(function (data) {
             if (data.success) {
                 _this.adminRequests = JSON.parse(data.message);
                 _this.sendInfo();
+            }
+            else {
+                _this.sendAlertDanger(data.message);
             }
         });
     };

@@ -10,6 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -71,19 +72,10 @@ func randState() string {
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
-	response := &Response{
-		true,
-		"DAMN kid!",
-	}
+	var indexTemplate *template.Template
+	indexTemplate = template.Must(template.ParseGlob("templates/index.html"))
+	indexTemplate.Execute(w, nil)
 
-	json, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -133,29 +125,15 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	log.Println("Email body: ", string(data))
 
-	// ----> below line is just for testing purposes
-	fmt.Fprintf(w, "%s", string(data))
+	http.Redirect(w, r, "/", 302)
+	
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
-	var response Response
-
 	ClearCookieHandler(w)
-
-	response = Response{
-		true,
-		"User logged out",
-	}
-
-	json, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
+	http.Redirect(w, r, "/", 302)
+	
 }
 
 func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
