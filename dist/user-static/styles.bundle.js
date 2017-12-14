@@ -35,7 +35,7 @@ exports = module.exports = __webpack_require__("../../../../css-loader/lib/css-b
 
 
 // module
-exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n* {\n\tbox-sizing: border-box;\n\toutline: none;\n}\n\na {\n\ttext-decoration: none;\n}\n\nbody {\n\tfont-family: 'Quicksand', sans-serif;\n\tmargin: 0;\n\tpadding: 0;\n\tbackground-color: #222;\n}\n\nbutton, table {\n\tfont-family: 'Quicksand', sans-serif;\n}\n\nbutton {\n\tcursor: pointer;\n}", ""]);
+exports.push([module.i, "/* You can add global styles to this file, and also import other style files */", ""]);
 
 // exports
 

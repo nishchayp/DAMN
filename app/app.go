@@ -21,7 +21,6 @@ func Run() {
 
 	router := httprouter.New()
 
-	router.ServeFiles("/static/*filepath", http.Dir("./dist/admin"))
 	router.GET("/", Index)
 	router.GET("/login", LoginHandler)
 	router.GET("/logout", LogoutHandler)
@@ -38,10 +37,12 @@ func Run() {
 	router.GET("/admin/rejectAccessRequest/:id", RejectAccessRequest)
 	router.GET("/admin/revokeAccessPrivilege/:id", RevokeAccessPrivilege)
 
-	router.GET("/accesses", AccessesHandler)
-	router.GET("/accessrequests", AccessRequestsHandler)
-	router.GET("/admins", AdminsHandler)
-	router.GET("/adminrequests", AdminRequestsHandler)
+	router.GET("/admin/getAccesses", AccessesHandler)
+	router.GET("/admin/getAccessRequests", AccessRequestsHandler)
+	router.GET("/admin/getAdmins", AdminsHandler)
+	router.GET("/admin/getAdminRequests", AdminRequestsHandler)
+
+	router.NotFound = http.FileServer(http.Dir("./dist"))
 
 	log.Println("Server listening at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", router))

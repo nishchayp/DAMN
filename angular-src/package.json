@@ -23,6 +23,7 @@
     "@angular/router": "^4.2.4",
     "core-js": "^2.4.1",
     "ngx-clipboard": "^9.0.0",
+    "ngx-cookie-service": "^1.0.9",
     "rxjs": "^5.4.2",
     "zone.js": "^0.8.14"
   },
@@ -34,6 +35,8 @@
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
     "codelyzer": "~3.2.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
     "jasmine-core": "~2.6.2",
     "jasmine-spec-reporter": "~4.1.0",
     "karma": "~1.7.0",
