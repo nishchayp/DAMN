@@ -7,11 +7,12 @@
     {
       "name": "admin",
       "root": "src",
-      "outDir": "../dist/admin",
+      "outDir": "../dist/admin-static",
       "assets": [
         "assets",
         "favicon.ico"
       ],
+      "deployUrl": "/admin-static/",
       "index": "admin.html",
       "main": "main-admin.ts",
       "polyfills": "polyfills.ts",
@@ -20,7 +21,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "admin",
       "styles": [
-        "styles.css"
+        "admin-styles.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
@@ -32,11 +33,12 @@
     {
       "name": "user",
       "root": "src",
-      "outDir": "../dist/user",
+      "outDir": "../dist/user-static",
       "assets": [
         "assets",
         "favicon.ico"
       ],
+      "deployUrl": "/user-static/",
       "index": "index.html",
       "main": "main-user.ts",
       "polyfills": "polyfills.ts",
