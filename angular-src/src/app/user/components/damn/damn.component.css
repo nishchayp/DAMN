@@ -1,0 +1,46 @@
+.logout-btn {
+	position: absolute;
+	top: 30px;
+	right: 40px;
+	text-decoration: none;
+	color: #fff;
+	background-color: #3384EF;
+	padding: 12px 22px;
+	border-radius: 5px;
+	box-shadow: 0px 3px 10px 1px #ccc;
+}
+.container {
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.form-container {
+	width: 700px; 
+}
+.access-req-textarea {
+	width: 100%;
+	height: 100px;
+	margin-bottom: 20px;
+	outline: none;
+	border: solid thin #ddd;
+	box-shadow: 0px 3px 10px 1px #ccc;
+	padding: 10px;
+	border-radius: 3px;
+	font-size: 1rem;
+}
+#ssh-key {
+	height: 150px;
+}
+.btn {
+	border: none;
+	margin: 10px 5px;
+	border-radius: 3px;
+	color: #eee;
+	background-color: #222;
+	font-size: 1rem;
+	padding: 12px 22px;
+	cursor: pointer;
+	box-shadow: 0px 3px 10px 1px #ccc;
+}

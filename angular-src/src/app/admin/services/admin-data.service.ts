@@ -35,7 +35,7 @@ export class AdminDataService {
   getAccesses() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/admin/getAccesses', { headers: headers, withCredentials: true })
+    return this.http.get('/admin/getAccesses', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.accesses = JSON.parse(data.message);
@@ -49,7 +49,7 @@ export class AdminDataService {
   getAdmins() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/admin/getAdmins', { headers: headers, withCredentials: true })
+    return this.http.get('/admin/getAdmins', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.admins = JSON.parse(data.message);
@@ -63,7 +63,7 @@ export class AdminDataService {
   getAccessRequests() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/admin/getAccessRequests', { headers: headers, withCredentials: true })
+    return this.http.get('/admin/getAccessRequests', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.accessRequests = JSON.parse(data.message);
@@ -77,7 +77,7 @@ export class AdminDataService {
   getAdminRequests() {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    return this.http.get('http://127.0.0.1:8080/admin/getAdminRequests', { headers: headers, withCredentials: true })
+    return this.http.get('/admin/getAdminRequests', { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.adminRequests = JSON.parse(data.message);
@@ -137,7 +137,7 @@ export class AdminDataService {
   acceptAdminRequests(id, index) {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    this.http.get('http://127.0.0.1:8080/admin/acceptAdminRequest/' + id, { headers: headers, withCredentials: true })
+    this.http.get('/admin/acceptAdminRequest/' + id, { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.adminRequests.splice(index, 1);
@@ -150,7 +150,7 @@ export class AdminDataService {
   rejectAdminRequests(id, index) {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    this.http.get('http://127.0.0.1:8080/admin/rejectAdminRequest/' + id, { headers: headers, withCredentials: true })
+    this.http.get('/admin/rejectAdminRequest/' + id, { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.adminRequests.splice(index, 1);
@@ -163,7 +163,7 @@ export class AdminDataService {
   revokeAdminPrivilege(id, index) {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    this.http.get('http://127.0.0.1:8080/admin/revokeAdminPrivilege/' + id, { headers: headers, withCredentials: true })
+    this.http.get('/admin/revokeAdminPrivilege/' + id, { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.admins.splice(index, 1);
@@ -176,7 +176,7 @@ export class AdminDataService {
   revokeAccessPrivilege(id, index) {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    this.http.get('http://127.0.0.1:8080/admin/revokeAccessPrivilege/' + id, { headers: headers, withCredentials: true })
+    this.http.get('/admin/revokeAccessPrivilege/' + id, { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         console.log('asd');
@@ -190,7 +190,7 @@ export class AdminDataService {
   rejectAccessRequest(id, index) {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    this.http.get('http://127.0.0.1:8080/admin/rejectAccessRequest/' + id, { headers: headers, withCredentials: true })
+    this.http.get('/admin/rejectAccessRequest/' + id, { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.accessRequests.splice(index, 1);
@@ -203,7 +203,7 @@ export class AdminDataService {
   acceptAccessRequest(ip, id, index) {
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
-    this.http.post('http://127.0.0.1:8080/admin/acceptAccessRequest/' + id, ip, { headers: headers, withCredentials: true })
+    this.http.post('/admin/acceptAccessRequest/' + id, ip, { headers: headers, withCredentials: true })
     .map(res => res.json()).subscribe(data => {
       if(data.success) {
         this.accessRequests.splice(index, 1);
