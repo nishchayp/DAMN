@@ -1,1 +1,11 @@
-DAMN <a href="/logout">Logout</a>
+<a class="logout-btn" href="/logout">Logout</a>
+<div class="container">
+    <div class="form-container">
+      <form [formGroup]="accessRequestForm" (submit)="makeAccessRequest(accessRequestForm.value)">
+        <textarea class="access-req-textarea" name="message" formControlName="message" placeholder="Message" [(ngModel)]="message"></textarea><br>
+        <textarea class="access-req-textarea" id="ssh-key" name="ssh_key" formControlName="ssh_key" placeholder="SSH Key" [(ngModel)]="ssh_key"></textarea><br>
+        <button class="btn" [disabled]="!accessRequestForm.valid" type="submit">Request for access</button>
+      </form> 
+      <button class="btn" (click)="makeAdminRequest()">Request for administrative privileges</button>
+    </div>
+</div>
