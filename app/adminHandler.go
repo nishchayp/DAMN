@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"encoding/json"
 	"github.com/codeskyblue/go-sh"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -180,25 +181,39 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 				"Unable to accept, request does not exists",
 			}
 		} else {
-			DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request)
 
-			//---->copy script goes here
-			//---->needs to be tested
-			sh.Command("./scripts/copy_key_to_server.sh", receive.IP, access_request.SshKey).Run()
+			// test ssh connection b/w source and dest servers
+			status, _ := sh.Command("./scripts/test_connection.sh", receive.IP).Output()
 
-			access = Access{
-				Name:   access_request.Name,
-				Email:  access_request.Email,
-				IP:     receive.IP,
-				SshKey: access_request.SshKey,
+			if !bytes.Equal(status, []byte("ok\n")) {
+				response = Response{
+					false,
+					"Can't connect using ssh, check if destination server has been set up correctly",
+				}
+
+			} else {
+
+				DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request)
+
+				// execute shell script to copy ssh key to specified server
+				sh.Command("./scripts/copy_key_to_server.sh", receive.IP, access_request.SshKey).Run()
+
+				access = Access{
+					Name:   access_request.Name,
+					Email:  access_request.Email,
+					IP:     receive.IP,
+					SshKey: access_request.SshKey,
+				}
+				DB.db.Create(&access)
+				DB.db.Delete(&access_request)
+
+				response = Response{
+					true,
+					"Request accepted, new access created",
+				}
+
 			}
-			DB.db.Create(&access)
-			DB.db.Delete(&access_request)
 
-			response = Response{
-				true,
-				"Request accepted, new access created",
-			}
 		}
 
 	} else {
@@ -270,15 +285,27 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 				"Unable to delete, access does not exists",
 			}
 		} else {
-			DB.db.Debug().Where("access_id = ?", ps.ByName("id")).Delete(&access)
 
-			//---->remove script goes here
+			// test ssh connection b/w source and dest servers
+			status, _ := sh.Command("./scripts/test_connection.sh", access.IP).Output()
 
-			sh.Command("./scripts/remove_key_from_server.sh", access.IP, access.SshKey).Run()
+			if !bytes.Equal(status, []byte("ok\n")) {
+				response = Response{
+					false,
+					"Can't connect using ssh, check if destination server has been set up correctly",
+				}
 
-			response = Response{
-				true,
-				"Access privileges successfully revoked",
+			} else {
+
+				DB.db.Debug().Where("access_id = ?", ps.ByName("id")).Delete(&access)
+
+				// execute shell script to remove ssh key from the specified server
+				sh.Command("./scripts/remove_key_from_server.sh", access.IP, access.SshKey).Run()
+
+				response = Response{
+					true,
+					"Access privileges successfully revoked",
+				}
 			}
 		}
 
