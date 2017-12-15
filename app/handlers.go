@@ -126,14 +126,14 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	log.Println("Email body: ", string(data))
 
 	http.Redirect(w, r, "/", 302)
-	
+
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	ClearCookieHandler(w)
 	http.Redirect(w, r, "/", 302)
-	
+
 }
 
 func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
