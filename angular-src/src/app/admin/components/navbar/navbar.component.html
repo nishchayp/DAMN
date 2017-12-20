@@ -11,6 +11,7 @@
 	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/admins']">Admins</div>
 	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/adminrequests']">Admin Requests</div>
 	<div (click)="closeNav()" class="logout-container">
-		<a href="/logout" class="logout-button">Logout</a>
+		<div><a href="/"><i class="fa home-icon">&#xf015;</i></a></div>
+		<div><a href="/logout" class="logout-button">Logout</a></div>
 	</div>
 </nav>
