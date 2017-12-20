@@ -4,12 +4,9 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/julienschmidt/httprouter"
 	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -21,58 +18,7 @@ import (
 ** contains fuctions to interact with OAuth2
  */
 
-var confOAuth2 *oauth2.Config
-
 var state string
-
-func init() {
-
-	// doesen't needs to be called explicitly
-	// configures OAuth2 and Mysql
-
-	var credOAuth2 CredentialOAuth2
-	var credMysql CredentialMysql
-
-	fileOAuth2, err := ioutil.ReadFile("./credOAuth2.json")
-	if err != nil {
-		log.Fatalf("Error while reading oauth2 config file.\nError: %v\n", err.Error())
-	}
-	json.Unmarshal(fileOAuth2, &credOAuth2)
-
-	confOAuth2 = &oauth2.Config{
-
-		// presently set through account nishchayparashar98@gmail.com
-		ClientID:     credOAuth2.Cid,
-		ClientSecret: credOAuth2.Csecret,
-
-		// change redirect on production server
-		RedirectURL: "http://127.0.0.1:8080/options",
-
-		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.email",
-		},
-		Endpoint: google.Endpoint,
-	}
-
-	fileMysql, err := ioutil.ReadFile("./credMysql.json")
-	if err != nil {
-		log.Fatalf("Error while reading oauth2 config file.\nError: %v\n", err.Error())
-	}
-	json.Unmarshal(fileMysql, &credMysql)
-
-	connectionString := fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
-		credMysql.DBUsername,
-		credMysql.DBPassword,
-		credMysql.DBName)
-
-	DB.db, err = gorm.Open("mysql", connectionString)
-	if err != nil {
-		log.Fatal("Could not open database : ", err.Error())
-	}
-
-	state = randState()
-
-}
 
 func randState() string {
 
@@ -202,7 +148,7 @@ func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 		var accessRequest AccessRequest
 
 		// register new request if it does not already exists
-		notFoundErr := DB.db.Debug().Where("email = ?", googTok.Email).First(&accessRequest).Error
+		notFoundErr := DB.db.Where("email = ?", googTok.Email).First(&accessRequest).Error
 		if notFoundErr != nil {
 			accessRequest = AccessRequest{
 				Name:    googTok.Name,
@@ -253,10 +199,20 @@ func MakeAdminRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	} else {
 
 		var adminRequest AdminRequest
+		var admin Admin
 
 		// register new request if it does not already exists
-		notFoundErr := DB.db.Debug().Where("email = ?", googTok.Email).First(&adminRequest).Error
-		if notFoundErr != nil {
+		if DB.db.Where("email = ?", googTok.Email).First(&adminRequest).RecordNotFound() == false {
+			response = Response{
+				false,
+				"Request already exists",
+			}
+		} else if DB.db.Where("email = ?", googTok.Email).First(&admin).RecordNotFound() == false {
+			response = Response{
+				false,
+				"User is already an admin",
+			}
+		} else {
 			adminRequest = AdminRequest{
 				Name:  googTok.Name,
 				Email: googTok.Email,
@@ -267,11 +223,6 @@ func MakeAdminRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 			response = Response{
 				true,
 				"New request sent",
-			}
-		} else {
-			response = Response{
-				false,
-				"Request already exists",
 			}
 		}
 
