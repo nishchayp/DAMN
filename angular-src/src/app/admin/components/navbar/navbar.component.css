@@ -37,7 +37,7 @@
 	top: 9px;
 }
 
-@media only screen and (max-width: 985px) {
+@media only screen and (max-width: 1050px) {
 
 	#burger-container {
 		display: block;
@@ -67,6 +67,8 @@
 }
 
 .logout-container {
+	display: flex;
+	align-items: center;
 	margin-left: auto;
 }
 
@@ -80,7 +82,14 @@
 	cursor: pointer;
 }
 
-@media only screen and (max-width: 985px) {
+.home-icon {
+	color: #bbb;
+	font-size: 2rem;
+	cursor: pointer;
+	margin: 10px 20px 0 0;
+}
+
+@media only screen and (max-width: 1050px) {
 
 	.nav {
 		flex-direction: column;
@@ -107,8 +116,14 @@
 	}
 
 	.logout-container {
-		padding: 20px 30px 30px;
+		min-height: 90px;
+		box-sizing: border-box;
+		padding: 20px 0 30px;
 		width: 100%;
+	}
+
+	.home-icon {
+		margin: 0 20px 0 0;
 	}
 
 }
