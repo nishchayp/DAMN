@@ -125,8 +125,16 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	log.Println("Email body: ", string(data))
 
-	http.Redirect(w, r, "/", 302)
-	
+	var admin Admin
+
+	if DB.db.Debug().Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
+		http.Redirect(w, r, "/", 302)
+	} else {
+		var adminTemplate *template.Template
+		adminTemplate = template.Must(template.ParseGlob("templates/admin.html"))
+		adminTemplate.Execute(w, nil)
+	}
+
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
