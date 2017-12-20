@@ -7,15 +7,13 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/julienschmidt/httprouter"
 	"html/template"
+	"log"
 	"net/http"
 )
 
-/*
-** contains handler fuctions which require admin account
-** contains fuctions to interact with shell scripts that handle ssh keys
- */
-
 func IsAdmin(w http.ResponseWriter, r *http.Request) (isAdminFlag bool) {
+
+	// read cookie and check db if email exists in admins table
 
 	googTok := ReadCookieHandler(w, r)
 
@@ -42,12 +40,16 @@ func AdminIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 func AcceptAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	// lets admin accept request to give a user admin privilege
+
 	var response Response
 	var admin_request AdminRequest
 	var admin Admin
 
 	if IsAdmin(w, r) {
 
+		// gives admin privilege to user by adding entry to admins table
+		// while deleting entry from admin_requests table
 		if DB.db.Debug().Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
 			response = Response{
 				false,
@@ -88,11 +90,14 @@ func AcceptAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 func RejectAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	// lets admin reject request to give a user admin privilege
+
 	var response Response
 	var admin_request AdminRequest
 
 	if IsAdmin(w, r) == true {
 
+		// deletes entry from admin_requests table
 		if DB.db.Debug().Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
 			response = Response{
 				false,
@@ -126,11 +131,14 @@ func RejectAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 func RevokeAdminPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	// lets admin revoke admin privileges of fellow admin
+
 	var response Response
 	var admin Admin
 
 	if IsAdmin(w, r) == true {
 
+		// deletes entry from admins table
 		if DB.db.Debug().Where("admin_id = ?", ps.ByName("id")).First(&admin).RecordNotFound() {
 			response = Response{
 				false,
@@ -164,6 +172,11 @@ func RevokeAdminPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	// lets admin accept access request
+	// copies user's ssh key to destination server
+
+	// request contains IP Address of the server
+	// to which access needs to be granted
 	type Receive struct {
 		IP string `json:"ip"`
 	}
@@ -176,10 +189,14 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&receive)
 	if err != nil {
-		panic(err)
+		http.Error(w, "Error reading the received request", http.StatusBadRequest)
+		log.Printf("Error reading the received request.\nError: %v\n", err.Error())
 	}
 	if IsAdmin(w, r) {
 
+		// gives access privilege to user by adding entry to accesses table
+		// executes shell script which copies user's ssh key to desired dest server over ssh
+		// while deleting entry from access_requests table
 		if DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
 			response = Response{
 				false,
@@ -187,7 +204,7 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 			}
 		} else {
 
-			// test ssh connection b/w source and dest servers
+			// test ssh connection b/w source(DAMN server) and dest servers
 			status, _ := sh.Command("./scripts/test_connection.sh", receive.IP).Output()
 
 			if !bytes.Equal(status, []byte("ok\n")) {
@@ -200,7 +217,7 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 				DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request)
 
-				// execute shell script to copy ssh key to specified server
+				// execute shell script to copy ssh key to specified server over ssh
 				sh.Command("./scripts/copy_key_to_server.sh", receive.IP, access_request.SshKey).Run()
 
 				access = Access{
@@ -241,11 +258,14 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 func RejectAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	// lets admin reject access request
+
 	var response Response
 	var access_request AccessRequest
 
 	if IsAdmin(w, r) == true {
 
+		// deletes entry from access_requests table
 		if DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
 			response = Response{
 				false,
@@ -279,11 +299,15 @@ func RejectAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
+	// lets admin revoke access privileges of users
+
 	var response Response
 	var access Access
 
 	if IsAdmin(w, r) == true {
 
+		// revokes access privilege to user by deleting entry from accesses table
+		// executes shell script which removes user's ssh key from intended dest server over ssh
 		if DB.db.Debug().Where("access_id = ?", ps.ByName("id")).First(&access).RecordNotFound() {
 			response = Response{
 				false,
@@ -291,7 +315,7 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 			}
 		} else {
 
-			// test ssh connection b/w source and dest servers
+			// test ssh connection b/w source(DAMN server) and dest servers
 			status, _ := sh.Command("./scripts/test_connection.sh", access.IP).Output()
 
 			if !bytes.Equal(status, []byte("ok\n")) {
