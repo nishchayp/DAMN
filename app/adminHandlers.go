@@ -10,6 +10,11 @@ import (
 	"net/http"
 )
 
+/*
+** contains handler fuctions which require admin account
+** contains fuctions to interact with shell scripts that handle ssh keys
+ */
+
 func IsAdmin(w http.ResponseWriter, r *http.Request) (isAdminFlag bool) {
 
 	googTok := ReadCookieHandler(w, r)
@@ -316,138 +321,6 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 		}
 	}
 
-	json, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
-
-}
-
-func AccessesHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	var response Response
-	var accesses []Access
-
-	if IsAdmin(w, r) == true {
-		DB.db.Find(&accesses)
-		json, err := json.Marshal(accesses)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		response = Response{
-			true,
-			string(json),
-		}
-	} else {
-		response = Response{
-			false,
-			"User not admin",
-		}
-	}
-	json, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
-
-}
-
-func AccessRequestsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	var response Response
-	var access_requests []AccessRequest
-
-	if IsAdmin(w, r) == true {
-		DB.db.Find(&access_requests)
-		json, err := json.Marshal(access_requests)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		response = Response{
-			true,
-			string(json),
-		}
-	} else {
-		response = Response{
-			false,
-			"User not admin",
-		}
-	}
-	json, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
-
-}
-
-func AdminsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	var response Response
-	var admins []Admin
-
-	if IsAdmin(w, r) == true {
-		DB.db.Find(&admins)
-		json, err := json.Marshal(admins)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		response = Response{
-			true,
-			string(json),
-		}
-	} else {
-		response = Response{
-			false,
-			"User not admin",
-		}
-	}
-	json, err := json.Marshal(response)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(json)
-
-}
-
-func AdminRequestsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	var response Response
-	var admin_requests []AdminRequest
-
-	if IsAdmin(w, r) == true {
-		DB.db.Find(&admin_requests)
-		json, err := json.Marshal(admin_requests)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		response = Response{
-			true,
-			string(json),
-		}
-	} else {
-		response = Response{
-			false,
-			"User not admin",
-		}
-	}
 	json, err := json.Marshal(response)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

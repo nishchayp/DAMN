@@ -1,5 +1,9 @@
 package app
 
+/*
+** contains all models of the data base
+ */
+
 type AccessRequest struct {
 	AccessRequestID uint   `json:"access_request_id" sql:"AUTO_INCREMENT" gorm:"primary_key"`
 	Name            string `json:"name" sql:"not null"`
