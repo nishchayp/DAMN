@@ -1,11 +1,14 @@
 package app
 
 import (
-	// "fmt"
 	"github.com/gorilla/securecookie"
 	"net/http"
 	"time"
 )
+
+/*
+** contains all middleware fuctions to interact with cookies
+ */
 
 var cookieHandler = securecookie.New(
 	securecookie.GenerateRandomKey(64),
