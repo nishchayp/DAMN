@@ -19,7 +19,7 @@ func IsAdmin(w http.ResponseWriter, r *http.Request) (isAdminFlag bool) {
 
 	var admin Admin
 
-	if DB.db.Debug().Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
+	if DB.db.Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
 		return false
 	} else {
 		return true
@@ -50,13 +50,13 @@ func AcceptAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 		// gives admin privilege to user by adding entry to admins table
 		// while deleting entry from admin_requests table
-		if DB.db.Debug().Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
+		if DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to accept, request does not exists",
 			}
 		} else {
-			DB.db.Debug().Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request)
+			DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request)
 			admin = Admin{
 				Name:  admin_request.Name,
 				Email: admin_request.Email,
@@ -68,6 +68,7 @@ func AcceptAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 				true,
 				"Request accepted, new admin created",
 			}
+			log.Printf("New admin created. Name: %v | Email: %v", admin.Name, admin.Email)
 		}
 
 	} else {
@@ -98,13 +99,13 @@ func RejectAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 	if IsAdmin(w, r) == true {
 
 		// deletes entry from admin_requests table
-		if DB.db.Debug().Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
+		if DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to delete, request does not exists",
 			}
 		} else {
-			DB.db.Debug().Where("admin_request_id = ?", ps.ByName("id")).Delete(&admin_request)
+			DB.db.Where("admin_request_id = ?", ps.ByName("id")).Delete(&admin_request)
 			response = Response{
 				true,
 				"Admin request successfully rejected",
@@ -139,13 +140,14 @@ func RevokeAdminPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter.
 	if IsAdmin(w, r) == true {
 
 		// deletes entry from admins table
-		if DB.db.Debug().Where("admin_id = ?", ps.ByName("id")).First(&admin).RecordNotFound() {
+		if DB.db.Where("admin_id = ?", ps.ByName("id")).First(&admin).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to delete, admin does not exists",
 			}
 		} else {
-			DB.db.Debug().Where("admin_id = ?", ps.ByName("id")).Delete(&admin)
+			log.Printf("An admin's privileges revoked. Name: %v | Email: %v", admin.Name, admin.Email)
+			DB.db.Where("admin_id = ?", ps.ByName("id")).Delete(&admin)
 			response = Response{
 				true,
 				"Admin privileges successfully revoked",
@@ -197,7 +199,7 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		// gives access privilege to user by adding entry to accesses table
 		// executes shell script which copies user's ssh key to desired dest server over ssh
 		// while deleting entry from access_requests table
-		if DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
+		if DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to accept, request does not exists",
@@ -215,7 +217,7 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 			} else {
 
-				DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request)
+				DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&access_request)
 
 				// execute shell script to copy ssh key to specified server over ssh
 				sh.Command("./scripts/copy_key_to_server.sh", receive.IP, access_request.SshKey).Run()
@@ -233,6 +235,8 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 					true,
 					"Request accepted, new access created",
 				}
+
+				log.Printf("New access granted. Name: %v | Email: %v | To: %v", access.Name, access.Email, access.IP)
 
 			}
 
@@ -266,13 +270,13 @@ func RejectAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 	if IsAdmin(w, r) == true {
 
 		// deletes entry from access_requests table
-		if DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
+		if DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to delete, request does not exists",
 			}
 		} else {
-			DB.db.Debug().Where("access_request_id = ?", ps.ByName("id")).Delete(&access_request)
+			DB.db.Where("access_request_id = ?", ps.ByName("id")).Delete(&access_request)
 			response = Response{
 				true,
 				"Access request successfully rejected",
@@ -308,7 +312,7 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 
 		// revokes access privilege to user by deleting entry from accesses table
 		// executes shell script which removes user's ssh key from intended dest server over ssh
-		if DB.db.Debug().Where("access_id = ?", ps.ByName("id")).First(&access).RecordNotFound() {
+		if DB.db.Where("access_id = ?", ps.ByName("id")).First(&access).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to delete, access does not exists",
@@ -326,7 +330,9 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 
 			} else {
 
-				DB.db.Debug().Where("access_id = ?", ps.ByName("id")).Delete(&access)
+				log.Printf("Access privilege revoked. Name: %v | Email: %v | From: %v", access.Name, access.Email, access.IP)
+
+				DB.db.Where("access_id = ?", ps.ByName("id")).Delete(&access)
 
 				// execute shell script to remove ssh key from the specified server
 				sh.Command("./scripts/remove_key_from_server.sh", access.IP, access.SshKey).Run()
