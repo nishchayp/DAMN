@@ -5,6 +5,10 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+/*
+** contains all structs used in the app
+ */
+
 type Database struct {
 	db *gorm.DB
 }
