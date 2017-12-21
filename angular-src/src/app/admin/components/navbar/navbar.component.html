@@ -1,4 +1,4 @@
-<div [class.open]="navOpen" (click)="toggleNav()" id="burger-container">
+<div [class.open]="navOpen" [class.burger-no-network]="online === false" (click)="toggleNav()" id="burger-container">
   <div id="burger">
     <span>&nbsp;</span>
     <span>&nbsp;</span>
@@ -12,6 +12,6 @@
 	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/adminrequests']">Admin Requests</div>
 	<div (click)="closeNav()" class="logout-container">
 		<div><a href="/"><i class="fa home-icon">&#xf015;</i></a></div>
-		<div><a href="/logout" class="logout-button">Logout</a></div>
+		<div><a href="/logout" class="logout-button" [class.disabled]="online === false">Logout</a></div>
 	</div>
 </nav>

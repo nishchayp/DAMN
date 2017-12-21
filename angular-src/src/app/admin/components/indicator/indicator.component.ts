@@ -4,13 +4,12 @@ import { NetworkStatusService } from '../../services/network-status.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-  selector: 'admin-navbar',
-  templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  selector: 'admin-indicator',
+  templateUrl: './indicator.component.html',
+  styleUrls: ['./indicator.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class IndicatorComponent implements OnInit {
 
-  navOpen: boolean;
   online: boolean;
   subscription: Subscription;
 
@@ -20,22 +19,12 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     this.online = navigator.onLine;
-    this.navOpen = false;
+    window.addEventListener('online',  () => {this.networkStatusService.setStatus(true)});
+    window.addEventListener('offline', () => {this.networkStatusService.setStatus(false)});
     this.subscription = this.networkStatusService.getStatus().subscribe(() => {
       this.online = this.networkStatusService.online;
     });
   }
 
-  toggleNav() {
-    this.navOpen = !this.navOpen;
-  }
-
-  closeNav() {
-  	this.navOpen = false;
-  }
-
-  openNav() {
-  	this.navOpen = true;
-  }
-
 }
+
