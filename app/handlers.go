@@ -103,7 +103,7 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	var admin Admin
 
-	if DB.db.Debug().Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
+	if DB.db.Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
 		http.Redirect(w, r, "/", 302)
 	} else {
 		http.Redirect(w, r, "/admin", 302)
@@ -154,8 +154,7 @@ func MakeAccessRequest(w http.ResponseWriter, r *http.Request, _ httprouter.Para
 		var accessRequest AccessRequest
 
 		// register new request if it does not already exists
-		notFoundErr := DB.db.Where("email = ?", googTok.Email).First(&accessRequest).Error
-		if notFoundErr != nil {
+		if DB.db.Where("email = ?", googTok.Email).First(&accessRequest).RecordNotFound() == true {
 			accessRequest = AccessRequest{
 				Name:    googTok.Name,
 				Email:   googTok.Email,
