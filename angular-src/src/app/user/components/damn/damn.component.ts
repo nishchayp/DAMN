@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import { NetworkStatusService } from '../../services/network-status.service';
 import { UserDataService } from '../../services/user-data.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-damn',
@@ -13,15 +15,22 @@ export class DamnComponent implements OnInit {
   accessRequestForm: FormGroup;
   message: string;
   ssh_key: string;
+  online: boolean;
+  subscription: Subscription;
 
   constructor(
-    private userDataService: UserDataService
+    private userDataService: UserDataService,
+    private networkStatusService: NetworkStatusService
   ) { }
 
   ngOnInit() {
+    this.online = navigator.onLine;
     this.accessRequestForm = new FormGroup({
       message: new FormControl('', [<any>Validators.maxLength(250)]),
       ssh_key: new FormControl('', [<any>Validators.required])
+    });
+    this.subscription = this.networkStatusService.getStatus().subscribe(() => {
+      this.online = this.networkStatusService.online;
     });
   }
 

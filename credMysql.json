@@ -1,5 +1,5 @@
 {
-	"db_username": "damnUser",
-	"db_password": "damnPassword",
+	"db_username": "root",
+	"db_password": "root",
 	"db_name": "damnDb"
 }

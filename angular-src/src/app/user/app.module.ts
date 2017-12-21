@@ -10,9 +10,11 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 import { DamnComponent } from './components/damn/damn.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
+import { IndicatorComponent } from './components/indicator/indicator.component';
 
 import { AuthService } from './services/auth.service';
 import { UserDataService } from './services/user-data.service';
+import { NetworkStatusService } from './services/network-status.service';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -21,7 +23,8 @@ import { AuthGuard } from './guards/auth.guard';
     AppComponent,
     LoginComponent,
     DamnComponent,
-    SnackbarComponent
+    SnackbarComponent,
+    IndicatorComponent,
   ],
   imports: [
     routing,
@@ -29,7 +32,13 @@ import { AuthGuard } from './guards/auth.guard';
     HttpModule,
     ReactiveFormsModule
   ],
-  providers: [CookieService, AuthService, AuthGuard, UserDataService],
+  providers: [
+    CookieService,
+    AuthService,
+    AuthGuard,
+    UserDataService,
+    NetworkStatusService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

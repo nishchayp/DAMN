@@ -1,5 +1,5 @@
-<a class="logout-btn" href="/logout">Logout</a>
-<a class="admin-btn" href="/admin">Admin</a>
+<a class="logout-btn" href="/logout" [class.disabled]="online === false">Logout</a>
+<a class="admin-btn" href="/admin" [class.admin-btn-no-network]="online === false">Admin</a>
 
 <div class="container">
     <div class="form-container">

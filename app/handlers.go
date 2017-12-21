@@ -106,9 +106,7 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if DB.db.Debug().Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
 		http.Redirect(w, r, "/", 302)
 	} else {
-		var adminTemplate *template.Template
-		adminTemplate = template.Must(template.ParseGlob("templates/admin.html"))
-		adminTemplate.Execute(w, nil)
+		http.Redirect(w, r, "/admin", 302)
 	}
 
 }
