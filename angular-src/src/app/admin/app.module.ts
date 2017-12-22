@@ -15,8 +15,10 @@ import { AdminRequestsComponent } from './components/admin-requests/admin-reques
 import { ModalComponent } from './components/modal/modal.component';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { HeadingComponent } from './components/heading/heading.component';
+import { IndicatorComponent } from './components/indicator/indicator.component';
 
 import { AdminDataService } from './services/admin-data.service';
+import { NetworkStatusService } from './services/network-status.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,8 @@ import { AdminDataService } from './services/admin-data.service';
     AdminRequestsComponent,
     ModalComponent,
     SnackbarComponent,
-    HeadingComponent
+    HeadingComponent,
+    IndicatorComponent
   ],
   imports: [
   	routing,
@@ -37,7 +40,10 @@ import { AdminDataService } from './services/admin-data.service';
     HttpModule,
     ClipboardModule
   ],
-  providers: [AdminDataService],
+  providers: [
+    AdminDataService,
+    NetworkStatusService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

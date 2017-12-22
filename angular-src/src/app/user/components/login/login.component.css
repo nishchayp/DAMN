@@ -17,6 +17,18 @@
 .title {
 	padding: 20px 30px;
 	font-size: 4.1rem;
+	font-weight: lighter;
+	margin: 0;
+}
+
+.disabled {
+	display: none;
+}
+
+.offline {
+	font-size: 25px;
+	font-weight: bold;
+	color: black;
 }
 
 @media only screen and (max-width: 985px) {

@@ -28,7 +28,8 @@ func Run() {
 	router := httprouter.New()
 
 	router.GET("/", Index)
-	router.GET("/login", LoginHandler)
+	router.GET("/login", Index)
+	router.GET("/auth", AuthHandler)
 	router.GET("/logout", LogoutHandler)
 	router.GET("/options", Options)
 	router.POST("/makeAccessRequest", MakeAccessRequest)
@@ -47,6 +48,11 @@ func Run() {
 	router.GET("/admin/getAccessRequests", AccessRequestsHandler)
 	router.GET("/admin/getAdmins", AdminsHandler)
 	router.GET("/admin/getAdminRequests", AdminRequestsHandler)
+
+	router.GET("/accesses", AdminIndex)
+	router.GET("/accessrequests", AdminIndex)
+	router.GET("/admins", AdminIndex)
+	router.GET("/adminrequests", AdminIndex)
 
 	router.NotFound = http.FileServer(http.Dir("./dist"))
 

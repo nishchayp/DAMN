@@ -1,9 +1,11 @@
-<div class="data-item" *ngFor="let access of accesses; let i = index">
-  <div class="data">{{ access.name }}</div>
-  <div class="data">{{ access.ip }}</div>
-  <div class="items-right">
-    <div class="view-btn" (click)="view(access, i)">View</div>
+<main>
+  <div class="data-item" *ngFor="let access of accesses; let i = index">
+    <div class="data">{{ access.name }}</div>
+    <div class="data">{{ access.ip }}</div>
+    <div class="items-right">
+      <div class="view-btn" (click)="view(access, i)">View</div>
+    </div>
   </div>
-</div>
-<div class="no-content" *ngIf="!!accesses && !accesses.length">Nothing to show</div>
-<div class="no-content" *ngIf="!accesses">Loading</div>
+  <div class="no-content" *ngIf="!!accesses && !accesses.length">Nothing to show</div>
+  <div class="no-content" *ngIf="!accesses">Loading</div>
+</main>
