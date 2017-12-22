@@ -33,7 +33,6 @@ export class UserDataService {
     .map(res => res.json())
   }
 
-
   sendAlert(message) {
     this.snackbarMessage = message;
     this.snackbarType = true;

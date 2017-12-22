@@ -1,4 +1,5 @@
 importScripts('workbox-sw.prod.v2.1.2.js');
+// importScripts('workbox-background-sync.prod.v2.0.3.js');
 
 const workboxSW = new WorkboxSW();
 workboxSW.precache([
@@ -12,15 +13,15 @@ workboxSW.precache([
   },
   {
     "url": "admin-static/index.html",
-    "revision": "2ea11fbf79ba46eff761d4956a8e6659"
+    "revision": "9c70d0695d9455cd76f7a4dbaf196ac8"
   },
   {
-    "url": "admin-static/inline.9403069fabe5890ac8a4.bundle.js",
-    "revision": "b7cf0770a87a1bc589eb9f2598e36fcc"
+    "url": "admin-static/inline.ffd687d78a2a39d6133e.bundle.js",
+    "revision": "13e89e461192a780fcf2958d27622072"
   },
   {
-    "url": "admin-static/main.e5375b6cff88a4a12acf.bundle.js",
-    "revision": "0476aa234ea88f916c8ac224a33240a3"
+    "url": "admin-static/main.34858d7c0b597b613193.bundle.js",
+    "revision": "6c51221ce972f7abd0de3ab03c932217"
   },
   {
     "url": "admin-static/polyfills.10df7e33d13f0f4e4ea3.bundle.js",
@@ -36,35 +37,35 @@ workboxSW.precache([
   },
   {
     "url": "images/icons/icon-128x128.png",
-    "revision": "39b916daf0af6fd3f313fcc3c8c1616b"
+    "revision": "ae48bd293634ccc724e2237515ff4cea"
   },
   {
     "url": "images/icons/icon-144x144.png",
-    "revision": "a07f719148f1f11a299a8270502483cb"
+    "revision": "ad74d01d890786d909a601700bf499c8"
   },
   {
     "url": "images/icons/icon-152x152.png",
-    "revision": "c16b49f542d3ef5a0f973d1cd89c2b03"
+    "revision": "d728a3f50dffc84f1b20ed17b9dc390b"
   },
   {
     "url": "images/icons/icon-192x192.png",
-    "revision": "1d3c3126ff87a9524b37231487c8b5b7"
+    "revision": "2828d41ac54a4ddbcbeb9ac0b16919b2"
   },
   {
     "url": "images/icons/icon-384x384.png",
-    "revision": "8da20457457d4f14afc0d1364ca906fc"
+    "revision": "eb757039b42d89a49f04bd2c24b2b62e"
   },
   {
     "url": "images/icons/icon-512x512.png",
-    "revision": "ed5e09209e0fa86b7a3798993dd2c8b6"
+    "revision": "07c56ca9635be09665acc52cb4e2e915"
   },
   {
     "url": "images/icons/icon-72x72.png",
-    "revision": "00fc78901218fdb2203969e4ed3ad27b"
+    "revision": "de99e3ffb2b2831e56028bed806b77dd"
   },
   {
     "url": "images/icons/icon-96x96.png",
-    "revision": "eb092808c4404af612ad43e2f3e6cf82"
+    "revision": "119573c50a56caecc52d6c7790f63ada"
   },
   {
     "url": "manifest.json",
@@ -80,15 +81,15 @@ workboxSW.precache([
   },
   {
     "url": "user-static/index.html",
-    "revision": "2ea11fbf79ba46eff761d4956a8e6659"
+    "revision": "9c70d0695d9455cd76f7a4dbaf196ac8"
   },
   {
-    "url": "user-static/inline.417e9f232ebe156230aa.bundle.js",
-    "revision": "c4268eb1be8e6154b08a00b7392f78f2"
+    "url": "user-static/inline.9554ad9e5222aeba5ee7.bundle.js",
+    "revision": "ad99f784115a8222fb66e842547732c7"
   },
   {
-    "url": "user-static/main.70a3dba60cec0d89e3f6.bundle.js",
-    "revision": "df767370491f93c0d33fa135ba0fd36c"
+    "url": "user-static/main.ea52b42c5a4ee6dc8eee.bundle.js",
+    "revision": "2b0ef3791f52536796e485f00b5f0b3e"
   },
   {
     "url": "user-static/polyfills.10df7e33d13f0f4e4ea3.bundle.js",
@@ -101,39 +102,32 @@ workboxSW.precache([
   {
     "url": "user-static/vendor.ac94eee836a6cf48c626.bundle.js",
     "revision": "ae67b3371f3b03a4c25db58cc4925079"
+  },
+  {
+    "url": "workbox-background-sync.prod.v2.0.3.js",
+    "revision": "2da4c7c2602de81accb7e3e4f611e73f"
   }
 ]);
 
-workboxSW.router.registerRoute('/',
-  workboxSW.strategies.cacheFirst()
-);
-
-workboxSW.router.registerRoute('/admin',
-  workboxSW.strategies.cacheFirst()
-);
+workboxSW.router.registerRoute('/', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/login', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/admin', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/accesses', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/accessrequests', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/admins', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/adminrequests', workboxSW.strategies.cacheFirst());
 
 workboxSW.router.registerRoute(new RegExp('/admin/getAccesses'),
-  workboxSW.strategies.networkFirst({
-    cacheName: 'dynamic-cache'
-  })
+  workboxSW.strategies.networkFirst({cacheName: 'dynamic-cache'})
 );
-
 workboxSW.router.registerRoute(new RegExp('/admin/getAccessRequests'),
-  workboxSW.strategies.networkFirst({
-    cacheName: 'dynamic-cache'
-  })
+  workboxSW.strategies.networkFirst({cacheName: 'dynamic-cache'})
 );
-
 workboxSW.router.registerRoute(new RegExp('/admin/getAdmins'),
-  workboxSW.strategies.networkFirst({
-    cacheName: 'dynamic-cache'
-  })
+  workboxSW.strategies.networkFirst({cacheName: 'dynamic-cache'})
 );
-
 workboxSW.router.registerRoute(new RegExp('/admin/getAdminRequests'),
-  workboxSW.strategies.networkFirst({
-    cacheName: 'dynamic-cache'
-  })
+  workboxSW.strategies.networkFirst({cacheName: 'dynamic-cache'})
 );
 
 workboxSW.router.registerRoute(new RegExp('^https://fonts\\.googleapis\\.com'),
@@ -145,7 +139,6 @@ workboxSW.router.registerRoute(new RegExp('^https://fonts\\.googleapis\\.com'),
     cacheableResponse: {statuses: [0, 200]}
   })
 );
-
 workboxSW.router.registerRoute(new RegExp('^https://cdnjs\\.cloudflare\\.com/ajax/libs/font-awesome'),
   workboxSW.strategies.cacheFirst({
     cacheName: 'iconfonts',
@@ -155,7 +148,6 @@ workboxSW.router.registerRoute(new RegExp('^https://cdnjs\\.cloudflare\\.com/aja
     cacheableResponse: {statuses: [0, 200]}
   })
 );
-
 workboxSW.router.registerRoute(new RegExp('^https://fonts\\.gstatic\\.com'),
   workboxSW.strategies.cacheFirst({
     cacheName: 'googleapis',
@@ -165,3 +157,43 @@ workboxSW.router.registerRoute(new RegExp('^https://fonts\\.gstatic\\.com'),
     cacheableResponse: {statuses: [0, 200]}
   })
 );
+
+// let bgQueue = new workbox.backgroundSync.Queue();
+
+// self.addEventListener('fetch', function(event){
+//   if (event.request.url.indexOf('/makeAdminRequest') !== -1)
+//     queueReqAndSync(event, 'admin-request');
+//   else if(event.request.url.indexOf('/makeAccessRequest' !== -1)
+//     queueReqAndSync(event, 'access-request');
+// });
+
+// function queueReqAndSync(e, regname) {
+//   const clone = e.request.clone();
+//   e.respondWith(fetch(e.request).catch((err) => {
+//     bgQueue.pushIntoQueue({
+//       request: clone,
+//     }).then((a) => {
+//       self.registration.sync.register(regname)
+//     });
+//   }));
+// }
+
+// self.addEventListener('sync', function (event) {
+//   if(event.tag === 'admin-request') {
+//     console.log('adminreq')
+//     event.waitUntil(bgQueue.replayRequests().then((a) => {
+//       console.log('Admin request sent');
+//     })
+//     .catch((err) => {
+//       console.log('Could not send admin request');
+//     }));
+//   } else if(event.tag === 'access-request') {
+//     console.log('accessreq')
+//     event.waitUntil(bgQueue.replayRequests().then((a) => {
+//       console.log('Access request sent');
+//     })
+//     .catch((err) => {
+//       console.log('Could not send access request');
+//     }));
+//   }
+// });

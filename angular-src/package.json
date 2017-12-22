@@ -50,6 +50,7 @@
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
     "typescript": "~2.3.3",
+    "workbox-background-sync": "^2.0.3",
     "workbox-build": "^2.1.2",
     "workbox-sw": "^2.1.2"
   }

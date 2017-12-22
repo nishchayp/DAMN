@@ -6992,6 +6992,10 @@ wordwrap@~0.0.2:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/wordwrap/-/wordwrap-0.0.3.tgz#a3d5da6cd5c0bc0008d37234bbaf1bed63059107"
 
+workbox-background-sync@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/workbox-background-sync/-/workbox-background-sync-2.0.3.tgz#94c767e1d47dfb295c5fd1a0d3d3c8d849bddd46"
+
 workbox-build@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/workbox-build/-/workbox-build-2.1.2.tgz#5425094a83ac77c991b6060dd1df3d37984ef87e"

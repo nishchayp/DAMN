@@ -1,5 +1,5 @@
-<div class="container">
-	<div class="title">DAMN</div>
-	<a [class.disabled]="online === false" class="login-btn" href="/login">Login</a>
+<main class="container">
+	<h1 class="title">DAMN</h1>
+	<a [class.disabled]="online === false" class="login-btn" href="/auth">Login</a>
 	<a *ngIf="online === false" class="offline" href="/login">it, you're offline</a>
-</div>
+</main>
