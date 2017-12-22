@@ -37,7 +37,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
-func LoginHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func AuthHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	// calls Google OAuth2 api endpoint on the provided configuration
 
@@ -106,9 +106,7 @@ func Options(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if DB.db.Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
 		http.Redirect(w, r, "/", 302)
 	} else {
-		var adminTemplate *template.Template
-		adminTemplate = template.Must(template.ParseGlob("templates/admin.html"))
-		adminTemplate.Execute(w, nil)
+		http.Redirect(w, r, "/admin", 302)
 	}
 
 }

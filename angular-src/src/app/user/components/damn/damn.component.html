@@ -1,13 +1,14 @@
-<a class="logout-btn" href="/logout">Logout</a>
-<a class="admin-btn" href="/admin">Admin</a>
-
-<div class="container">
-    <div class="form-container">
-      <form [formGroup]="accessRequestForm" (submit)="makeAccessRequest(accessRequestForm.value)">
-        <textarea class="access-req-textarea" name="message" formControlName="message" placeholder="Message" [(ngModel)]="message"></textarea><br>
-        <textarea class="access-req-textarea" id="ssh-key" name="ssh_key" formControlName="ssh_key" placeholder="SSH Key" [(ngModel)]="ssh_key"></textarea><br>
-        <button class="btn" [disabled]="!accessRequestForm.valid" type="submit">Request for access</button>
-      </form> 
-      <button class="btn" (click)="makeAdminRequest()">Request for administrative privileges</button>
-    </div>
-</div>
+<a class="logout-btn" href="/logout" [class.disabled]="online === false">Logout</a>
+<a class="admin-btn" href="/admin" [class.admin-btn-no-network]="online === false">Admin</a>
+<main>  
+  <div class="form-container">
+    <form [formGroup]="accessRequestForm" (submit)="makeAccessRequest(accessRequestForm.value)">
+      <label for="message"><h4>Message</h4></label>
+      <textarea id="message" class="access-req-textarea" name="message" formControlName="message" [(ngModel)]="message" autofocus="autofocus"></textarea><br>
+      <label for="ssh-key"><h4>SSH Key</h4></label>
+      <textarea class="access-req-textarea" id="ssh-key" name="ssh_key" formControlName="ssh_key" [(ngModel)]="ssh_key"></textarea><br>
+      <button class="btn" [disabled]="!accessRequestForm.valid" type="submit">Request for access</button>
+    </form> 
+    <button class="btn" (click)="makeAdminRequest()">Request for administrative privileges</button>
+  </div>
+</main>
