@@ -56,7 +56,7 @@ export class DamnComponent implements OnInit {
   }
 
   makeAdminRequest() {
-  	 this.userDataService.makeAdminRequest();
+   	this.userDataService.makeAdminRequest();
   }
 
 }

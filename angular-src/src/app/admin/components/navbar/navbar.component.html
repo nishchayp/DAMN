@@ -6,10 +6,10 @@
   </div>
 </div>
 <nav [class.navClosed]="!navOpen" class="nav">
-	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/accesses']">Accesses</div>
-	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/accessrequests']">Access Requests</div>
-	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/admins']">Admins</div>
-	<div (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/adminrequests']">Admin Requests</div>
+	<h2 (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/accesses']">Accesses</h2>
+	<h2 (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/accessrequests']">Access Requests</h2>
+	<h2 (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/admins']">Admins</h2>
+	<h2 (click)="closeNav()" class="nav-links" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/adminrequests']">Admin Requests</h2>
 	<div (click)="closeNav()" class="logout-container">
 		<div><a href="/"><i class="fa home-icon">&#xf015;</i></a></div>
 		<div><a href="/logout" class="logout-button" [class.disabled]="online === false">Logout</a></div>

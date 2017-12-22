@@ -1,12 +1,14 @@
-<div class="data-item" *ngFor="let adminRequest of adminRequests; let i = index">
-  <div class="data">{{ adminRequest.name }}</div>
-  <div class="data">{{ adminRequest.email }}</div>
-  <div class="items-right">
-    <div class="data-option-btn">
-      <button (click)="accept(adminRequest.admin_request_id, i)">Accept</button>
-      <button (click)="reject(adminRequest.admin_request_id, i)">Reject</button>
+<main>
+  <div class="data-item" *ngFor="let adminRequest of adminRequests; let i = index">
+    <div class="data">{{ adminRequest.name }}</div>
+    <div class="data">{{ adminRequest.email }}</div>
+    <div class="items-right">
+      <div class="data-option-btn">
+        <button (click)="accept(adminRequest.admin_request_id, i)">Accept</button>
+        <button (click)="reject(adminRequest.admin_request_id, i)">Reject</button>
+      </div>
     </div>
   </div>
-</div>
-<div class="no-content" *ngIf="!!adminRequests && !adminRequests.length">Nothing to show</div>
-<div class="no-content" *ngIf="!adminRequests">Loading</div>
+  <div class="no-content" *ngIf="!!adminRequests && !adminRequests.length">Nothing to show</div>
+  <div class="no-content" *ngIf="!adminRequests">Loading</div>
+</main>

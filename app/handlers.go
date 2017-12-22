@@ -37,7 +37,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
-func LoginHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func AuthHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	// calls Google OAuth2 api endpoint on the provided configuration
 

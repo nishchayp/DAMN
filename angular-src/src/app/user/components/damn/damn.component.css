@@ -4,30 +4,26 @@
 	right: 40px;
 	text-decoration: none;
 	color: #fff;
-	background-color: #3384EF;
+	background-color: #2551F8;
 	padding: 12px 22px;
 	border-radius: 5px;
 	box-shadow: 0px 3px 10px 1px #ccc;
+	font-weight: bold;
 }
 .admin-btn {
 	position: absolute;
 	top: 30px;
 	left: 40px;
 	text-decoration: none;
-	color: #ccc;
+	color: #fff;
 	background-color: #333;
 	padding: 12px 22px;
 	border-radius: 5px;
 	box-shadow: 0px 3px 10px 1px #ccc;
 }
-.container {
-	height: 100vh;
-	width: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+
 .form-container {
+	margin: 100px auto 0;
 	width: 700px; 
 }
 .access-req-textarea {
@@ -48,7 +44,7 @@
 	border: none;
 	margin: 10px 5px;
 	border-radius: 3px;
-	color: #eee;
+	color: #fff;
 	background-color: #222;
 	font-size: 1rem;
 	padding: 12px 22px;
@@ -75,14 +71,5 @@
 	.admin-btn {
 		top: 15px;
 		left: 10px;
-	}
-}
-
-@media only screen and (max-height: 700px) {
-	.container {
-		display: block;
-	}
-	.form-container {
-		margin: 100px auto 0;
 	}
 }

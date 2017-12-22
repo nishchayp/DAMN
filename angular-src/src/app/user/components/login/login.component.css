@@ -17,6 +17,8 @@
 .title {
 	padding: 20px 30px;
 	font-size: 4.1rem;
+	font-weight: lighter;
+	margin: 0;
 }
 
 .disabled {

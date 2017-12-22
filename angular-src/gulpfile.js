@@ -25,6 +25,7 @@ gulp.task('bundle-sw', () => {
     globDirectory: '../dist',
     staticFileGlobs: ['**/*'],
     globIgnores: [
+    'images/*',
     'admin-static/admin.html',
     'service-worker.js',
     'workbox-sw.prod.v2.1.2.js'
