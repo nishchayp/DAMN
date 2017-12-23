@@ -108,62 +108,13 @@ workboxSW.precache([
     "revision": "2da4c7c2602de81accb7e3e4f611e73f"
   }
 ]);
-
-workboxSW.router.registerRoute('/', () => {
-  bgQueue.replayRequests().then(() => {
-    return workboxSW.strategies.cacheFirst()
-  }).catch(err => {
-    return err;
-  });
-});
-
-workboxSW.router.registerRoute('/login', () => {
-  bgQueue.replayRequests().then(() => {
-    return workboxSW.strategies.cacheFirst()
-  }).catch(err => {
-    return err;
-  });
-});
-
-workboxSW.router.registerRoute('/admin', () => {
-  bgQueue.replayRequests().then(() => {
-    return workboxSW.strategies.cacheFirst()
-  }).catch(err => {
-    return err;
-  });
-});
-
-workboxSW.router.registerRoute('/accesses', () => {
-  bgQueue.replayRequests().then(() => {
-    return workboxSW.strategies.cacheFirst()
-  }).catch(err => {
-    return err;
-  });
-});
-
-workboxSW.router.registerRoute('/accessrequests', () => {
-  bgQueue.replayRequests().then(() => {
-    return workboxSW.strategies.cacheFirst()
-  }).catch(err => {
-    return err;
-  });
-});
-
-workboxSW.router.registerRoute('/admins', () => {
-  bgQueue.replayRequests().then(() => {
-    return workboxSW.strategies.cacheFirst()
-  }).catch(err => {
-    return err;
-  });
-});
-
-workboxSW.router.registerRoute('/adminrequests', () => {
-  bgQueue.replayRequests().then(() => {
-    return workboxSW.strategies.cacheFirst()
-  }).catch(err => {
-    return err;
-  });
-});
+workboxSW.router.registerRoute('/', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/login', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/admin', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/accesses', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/accessrequests', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/admins', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/adminrequests', workboxSW.strategies.cacheFirst());
 
 workboxSW.router.registerRoute(new RegExp('/admin/getAccesses'),
   workboxSW.strategies.networkFirst({cacheName: 'dynamic-cache'})
