@@ -19,7 +19,13 @@ export class IndicatorComponent implements OnInit {
 
   ngOnInit() {
     this.online = navigator.onLine;
-    window.addEventListener('online',  () => {this.networkStatusService.setStatus(true)});
+    window.addEventListener('online',  () => {
+      this.networkStatusService.setStatus(true);
+      if(navigator.serviceWorker.controller)
+        navigator.serviceWorker.controller.postMessage({
+            command: 'online'
+        });
+    });
     window.addEventListener('offline', () => {this.networkStatusService.setStatus(false)});
     this.subscription = this.networkStatusService.getStatus().subscribe(() => {
       this.online = this.networkStatusService.online;
