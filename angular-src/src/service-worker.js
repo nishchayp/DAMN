@@ -1,16 +1,64 @@
 importScripts('workbox-sw.prod.v2.1.2.js');
-// importScripts('workbox-background-sync.prod.v2.0.3.js');
+importScripts('workbox-background-sync.prod.v2.0.3.js');
 
 const workboxSW = new WorkboxSW();
 workboxSW.precache([]);
 
-workboxSW.router.registerRoute('/', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/login', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/admin', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/accesses', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/accessrequests', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/admins', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/adminrequests', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/login', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/admin', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/accesses', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/accessrequests', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/admins', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/adminrequests', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
 
 workboxSW.router.registerRoute(new RegExp('/admin/getAccesses'),
   workboxSW.strategies.networkFirst({cacheName: 'dynamic-cache'})
@@ -34,6 +82,7 @@ workboxSW.router.registerRoute(new RegExp('^https://fonts\\.googleapis\\.com'),
     cacheableResponse: {statuses: [0, 200]}
   })
 );
+
 workboxSW.router.registerRoute(new RegExp('^https://cdnjs\\.cloudflare\\.com/ajax/libs/font-awesome'),
   workboxSW.strategies.cacheFirst({
     cacheName: 'iconfonts',
@@ -43,6 +92,7 @@ workboxSW.router.registerRoute(new RegExp('^https://cdnjs\\.cloudflare\\.com/aja
     cacheableResponse: {statuses: [0, 200]}
   })
 );
+
 workboxSW.router.registerRoute(new RegExp('^https://fonts\\.gstatic\\.com'),
   workboxSW.strategies.cacheFirst({
     cacheName: 'googleapis',
@@ -53,42 +103,70 @@ workboxSW.router.registerRoute(new RegExp('^https://fonts\\.gstatic\\.com'),
   })
 );
 
-// let bgQueue = new workbox.backgroundSync.Queue();
+let bgQueue = new workbox.backgroundSync.QueuePlugin({
+  callbacks: {
+    replayDidSucceed: async(hash, res) => {
+      console.log(res);
+      if(res.url.indexOf('/makeAdminRequest') !== -1)
+        message = 'Administrative privileges request sent'
+      if(res.url.indexOf('/makeAccessRequest') !== -1)
+        message = 'Access request sent'
+      if(res.url.indexOf('/admin/acceptAdminRequest') !== -1)
+        message = 'You have accepted the admin request'
+      if(res.url.indexOf('/admin/rejectAdminRequest') !== -1)
+        message = 'You have rejected the admin request'
+      if(res.url.indexOf('/admin/revokeAdminPrivilege') !== -1)
+        message = 'You have revoked the admin privilege'
+      if(res.url.indexOf('/admin/acceptAccessRequest') !== -1)
+        message = 'You have accepted the access request'
+      if(res.url.indexOf('/admin/rejectAccessRequest') !== -1)
+        message = 'You have rejected the access request'
+      if(res.url.indexOf('/admin/revokeAccessPrivilege') !== -1)
+        message = 'You have revoked the access privileges'
+      if(Notification.permission === 'granted')
+        self.registration.showNotification('DAMN', {
+          body: message,
+          icon: './images/icons/icon-128x128.png',
+          vibrate: [100, 50, 100]
+        });
+    }
+  }
+});
 
-// self.addEventListener('fetch', function(event){
-//   if (event.request.url.indexOf('/makeAdminRequest') !== -1)
-//     queueReqAndSync(event, 'admin-request');
-//   else if(event.request.url.indexOf('/makeAccessRequest' !== -1)
-//     queueReqAndSync(event, 'access-request');
-// });
+workboxSW.router.registerRoute('/makeAdminRequest',
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
 
-// function queueReqAndSync(e, regname) {
-//   const clone = e.request.clone();
-//   e.respondWith(fetch(e.request).catch((err) => {
-//     bgQueue.pushIntoQueue({
-//       request: clone,
-//     }).then((a) => {
-//       self.registration.sync.register(regname)
-//     });
-//   }));
-// }
+workboxSW.router.registerRoute('/makeAccessRequest',
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'POST'
+);
 
-// self.addEventListener('sync', function (event) {
-//   if(event.tag === 'admin-request') {
-//     console.log('adminreq')
-//     event.waitUntil(bgQueue.replayRequests().then((a) => {
-//       console.log('Admin request sent');
-//     })
-//     .catch((err) => {
-//       console.log('Could not send admin request');
-//     }));
-//   } else if(event.tag === 'access-request') {
-//     console.log('accessreq')
-//     event.waitUntil(bgQueue.replayRequests().then((a) => {
-//       console.log('Access request sent');
-//     })
-//     .catch((err) => {
-//       console.log('Could not send access request');
-//     }));
-//   }
-// });
+workboxSW.router.registerRoute(new RegExp('/admin/acceptAdminRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/rejectAdminRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/revokeAdminPrivilege*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/acceptAccessRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'POST'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/rejectAccessRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/revokeAccessPrivilege*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+self.addEventListener('message', function(event) {
+  let data = event.data;
+  if(data.command == 'online')
+    bgQueue.replayRequests()
+});

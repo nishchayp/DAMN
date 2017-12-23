@@ -1,5 +1,5 @@
 importScripts('workbox-sw.prod.v2.1.2.js');
-// importScripts('workbox-background-sync.prod.v2.0.3.js');
+importScripts('workbox-background-sync.prod.v2.0.3.js');
 
 const workboxSW = new WorkboxSW();
 workboxSW.precache([
@@ -13,23 +13,23 @@ workboxSW.precache([
   },
   {
     "url": "admin-static/index.html",
-    "revision": "9c70d0695d9455cd76f7a4dbaf196ac8"
+    "revision": "4e6b345c4878bd919ee383fad9b27bff"
   },
   {
-    "url": "admin-static/inline.ffd687d78a2a39d6133e.bundle.js",
-    "revision": "13e89e461192a780fcf2958d27622072"
+    "url": "admin-static/inline.4ce40e0fb249ef6c445e.bundle.js",
+    "revision": "026f53cd3a39800075d443813ddd94b3"
   },
   {
-    "url": "admin-static/main.34858d7c0b597b613193.bundle.js",
-    "revision": "6c51221ce972f7abd0de3ab03c932217"
+    "url": "admin-static/main.a369562a73a8feb6aa94.bundle.js",
+    "revision": "544a913b090e5a76525824c97e920e96"
   },
   {
     "url": "admin-static/polyfills.10df7e33d13f0f4e4ea3.bundle.js",
     "revision": "3c76323055d3418b8c596188912c87ff"
   },
   {
-    "url": "admin-static/styles.015a27099dd848e97fa4.bundle.css",
-    "revision": "015a27099dd848e97fa45458038729c7"
+    "url": "admin-static/styles.146d8f0a5157c7726eb8.bundle.css",
+    "revision": "146d8f0a5157c7726eb846436b5240d4"
   },
   {
     "url": "admin-static/vendor.c4d96deb385334a753fe.bundle.js",
@@ -81,23 +81,23 @@ workboxSW.precache([
   },
   {
     "url": "user-static/index.html",
-    "revision": "9c70d0695d9455cd76f7a4dbaf196ac8"
+    "revision": "4e6b345c4878bd919ee383fad9b27bff"
   },
   {
-    "url": "user-static/inline.9554ad9e5222aeba5ee7.bundle.js",
-    "revision": "ad99f784115a8222fb66e842547732c7"
+    "url": "user-static/inline.d7e2f46eba80f01103f6.bundle.js",
+    "revision": "22c95e368f6264e2fa5a6208f06ee16f"
   },
   {
-    "url": "user-static/main.ea52b42c5a4ee6dc8eee.bundle.js",
-    "revision": "2b0ef3791f52536796e485f00b5f0b3e"
+    "url": "user-static/main.58f4cfb7ec6f2706ac32.bundle.js",
+    "revision": "a77c800795556286ad7839400c279f6b"
   },
   {
     "url": "user-static/polyfills.10df7e33d13f0f4e4ea3.bundle.js",
     "revision": "3c76323055d3418b8c596188912c87ff"
   },
   {
-    "url": "user-static/styles.48e72670b09a2857da07.bundle.css",
-    "revision": "48e72670b09a2857da07b30145b307fd"
+    "url": "user-static/styles.118713447dd8619ffaf5.bundle.css",
+    "revision": "118713447dd8619ffaf5b04624a4dd0e"
   },
   {
     "url": "user-static/vendor.ac94eee836a6cf48c626.bundle.js",
@@ -109,13 +109,61 @@ workboxSW.precache([
   }
 ]);
 
-workboxSW.router.registerRoute('/', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/login', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/admin', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/accesses', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/accessrequests', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/admins', workboxSW.strategies.cacheFirst());
-workboxSW.router.registerRoute('/adminrequests', workboxSW.strategies.cacheFirst());
+workboxSW.router.registerRoute('/', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/login', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/admin', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/accesses', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/accessrequests', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/admins', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
+
+workboxSW.router.registerRoute('/adminrequests', () => {
+  bgQueue.replayRequests().then(() => {
+    return workboxSW.strategies.cacheFirst()
+  }).catch(err => {
+    return err;
+  });
+});
 
 workboxSW.router.registerRoute(new RegExp('/admin/getAccesses'),
   workboxSW.strategies.networkFirst({cacheName: 'dynamic-cache'})
@@ -139,6 +187,7 @@ workboxSW.router.registerRoute(new RegExp('^https://fonts\\.googleapis\\.com'),
     cacheableResponse: {statuses: [0, 200]}
   })
 );
+
 workboxSW.router.registerRoute(new RegExp('^https://cdnjs\\.cloudflare\\.com/ajax/libs/font-awesome'),
   workboxSW.strategies.cacheFirst({
     cacheName: 'iconfonts',
@@ -148,6 +197,7 @@ workboxSW.router.registerRoute(new RegExp('^https://cdnjs\\.cloudflare\\.com/aja
     cacheableResponse: {statuses: [0, 200]}
   })
 );
+
 workboxSW.router.registerRoute(new RegExp('^https://fonts\\.gstatic\\.com'),
   workboxSW.strategies.cacheFirst({
     cacheName: 'googleapis',
@@ -158,42 +208,70 @@ workboxSW.router.registerRoute(new RegExp('^https://fonts\\.gstatic\\.com'),
   })
 );
 
-// let bgQueue = new workbox.backgroundSync.Queue();
+let bgQueue = new workbox.backgroundSync.QueuePlugin({
+  callbacks: {
+    replayDidSucceed: async(hash, res) => {
+      console.log(res);
+      if(res.url.indexOf('/makeAdminRequest') !== -1)
+        message = 'Administrative privileges request sent'
+      if(res.url.indexOf('/makeAccessRequest') !== -1)
+        message = 'Access request sent'
+      if(res.url.indexOf('/admin/acceptAdminRequest') !== -1)
+        message = 'You have accepted the admin request'
+      if(res.url.indexOf('/admin/rejectAdminRequest') !== -1)
+        message = 'You have rejected the admin request'
+      if(res.url.indexOf('/admin/revokeAdminPrivilege') !== -1)
+        message = 'You have revoked the admin privilege'
+      if(res.url.indexOf('/admin/acceptAccessRequest') !== -1)
+        message = 'You have accepted the access request'
+      if(res.url.indexOf('/admin/rejectAccessRequest') !== -1)
+        message = 'You have rejected the access request'
+      if(res.url.indexOf('/admin/revokeAccessPrivilege') !== -1)
+        message = 'You have revoked the access privileges'
+      if(Notification.permission === 'granted')
+        self.registration.showNotification('DAMN', {
+          body: message,
+          icon: './images/icons/icon-128x128.png',
+          vibrate: [100, 50, 100]
+        });
+    }
+  }
+});
 
-// self.addEventListener('fetch', function(event){
-//   if (event.request.url.indexOf('/makeAdminRequest') !== -1)
-//     queueReqAndSync(event, 'admin-request');
-//   else if(event.request.url.indexOf('/makeAccessRequest' !== -1)
-//     queueReqAndSync(event, 'access-request');
-// });
+workboxSW.router.registerRoute('/makeAdminRequest',
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
 
-// function queueReqAndSync(e, regname) {
-//   const clone = e.request.clone();
-//   e.respondWith(fetch(e.request).catch((err) => {
-//     bgQueue.pushIntoQueue({
-//       request: clone,
-//     }).then((a) => {
-//       self.registration.sync.register(regname)
-//     });
-//   }));
-// }
+workboxSW.router.registerRoute('/makeAccessRequest',
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'POST'
+);
 
-// self.addEventListener('sync', function (event) {
-//   if(event.tag === 'admin-request') {
-//     console.log('adminreq')
-//     event.waitUntil(bgQueue.replayRequests().then((a) => {
-//       console.log('Admin request sent');
-//     })
-//     .catch((err) => {
-//       console.log('Could not send admin request');
-//     }));
-//   } else if(event.tag === 'access-request') {
-//     console.log('accessreq')
-//     event.waitUntil(bgQueue.replayRequests().then((a) => {
-//       console.log('Access request sent');
-//     })
-//     .catch((err) => {
-//       console.log('Could not send access request');
-//     }));
-//   }
-// });
+workboxSW.router.registerRoute(new RegExp('/admin/acceptAdminRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/rejectAdminRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/revokeAdminPrivilege*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/acceptAccessRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'POST'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/rejectAccessRequest*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+workboxSW.router.registerRoute(new RegExp('/admin/revokeAccessPrivilege*'),
+  workboxSW.strategies.networkOnly({plugins: [bgQueue]}), 'GET'
+);
+
+self.addEventListener('message', function(event) {
+  let data = event.data;
+  if(data.command == 'online')
+    bgQueue.replayRequests()
+});

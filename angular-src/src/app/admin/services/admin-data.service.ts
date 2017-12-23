@@ -135,6 +135,8 @@ export class AdminDataService {
   }
 
   acceptAdminRequests(id, index) {
+    if(!navigator.onLine)
+      this.sendAlert('Request will be accepted');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     this.http.get('/admin/acceptAdminRequest/' + id, { headers: headers, withCredentials: true })
@@ -148,6 +150,8 @@ export class AdminDataService {
   }
 
   rejectAdminRequests(id, index) {
+    if(!navigator.onLine)
+      this.sendAlert('Request will be rejected');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     this.http.get('/admin/rejectAdminRequest/' + id, { headers: headers, withCredentials: true })
@@ -161,6 +165,8 @@ export class AdminDataService {
   }
 
   revokeAdminPrivilege(id, index) {
+    if(!navigator.onLine)
+      this.sendAlert('Privileges will be revoked');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     this.http.get('/admin/revokeAdminPrivilege/' + id, { headers: headers, withCredentials: true })
@@ -174,6 +180,8 @@ export class AdminDataService {
   }
 
   revokeAccessPrivilege(id, index) {
+    if(!navigator.onLine)
+      this.sendAlert('Access will be revoked');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     this.http.get('/admin/revokeAccessPrivilege/' + id, { headers: headers, withCredentials: true })
@@ -188,6 +196,8 @@ export class AdminDataService {
   }
 
   rejectAccessRequest(id, index) {
+    if(!navigator.onLine)
+      this.sendAlert('Request will be rejected');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     this.http.get('/admin/rejectAccessRequest/' + id, { headers: headers, withCredentials: true })
@@ -201,6 +211,8 @@ export class AdminDataService {
   }
 
   acceptAccessRequest(ip, id, index) {
+    if(!navigator.onLine)
+      this.sendAlert('Request will be accepted');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     this.http.post('/admin/acceptAccessRequest/' + id, ip, { headers: headers, withCredentials: true })

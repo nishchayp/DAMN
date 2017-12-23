@@ -15,6 +15,8 @@ export class UserDataService {
   constructor(private http: Http) { }
 
   makeAdminRequest() {
+    if(!navigator.onLine)
+      this.sendAlert('Request will be sent');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     return this.http.get('/makeAdminRequest', { headers: headers, withCredentials: true })
@@ -27,6 +29,8 @@ export class UserDataService {
   }
 
   makeAccessRequest(requestData) {
+    if(!navigator.onLine)
+      this.sendAlert('Request will be sent');
     let headers = new Headers();
     headers.append('Content-type', 'application/json');
     return this.http.post('/makeAccessRequest/', requestData, { headers: headers, withCredentials: true })
