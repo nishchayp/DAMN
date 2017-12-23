@@ -14,12 +14,14 @@ platformBrowserDynamic().bootstrapModule(AppModule)
   })
   .catch(err => console.log(err));
 
+declare const Notification: any;
 function registerServiceWorker(swName: string) {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
       .register(`/${swName}.js`)
       .then(reg => {
-        // console.log('SW registered: ', reg)
+        if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied')
+            Notification.requestPermission()
       })
       .catch(err =>
         console.error('[App] Service worker registration failed', err)

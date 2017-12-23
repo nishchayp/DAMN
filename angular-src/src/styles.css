@@ -21,3 +21,7 @@ button, table {
 button {
 	cursor: pointer;
 }
+
+h4 {
+	margin: 10px 0;
+}
