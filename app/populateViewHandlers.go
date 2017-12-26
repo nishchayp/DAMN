@@ -14,9 +14,8 @@ import (
 ** contains fuctions to populate views in admin portal
  */
 
+// AccessesHandler : fetches data from accesses table in db
 func AccessesHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	// fetches data from accesses table in db
 
 	var response Response
 	var accesses []Access
@@ -49,16 +48,15 @@ func AccessesHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Param
 
 }
 
+// AccessRequestsHandler : fetches data from access_requests table in db
 func AccessRequestsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	// fetches data from access_requests table in db
-
 	var response Response
-	var access_requests []AccessRequest
+	var accessRequests []AccessRequest
 
 	if IsAdmin(w, r) == true {
-		DB.db.Find(&access_requests)
-		json, err := json.Marshal(access_requests)
+		DB.db.Find(&accessRequests)
+		json, err := json.Marshal(accessRequests)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
@@ -84,9 +82,8 @@ func AccessRequestsHandler(w http.ResponseWriter, r *http.Request, ps httprouter
 
 }
 
+// AdminsHandler : fetches data from admins table in db
 func AdminsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	// fetches data from admins table in db
 
 	var response Response
 	var admins []Admin
@@ -119,16 +116,15 @@ func AdminsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 
 }
 
+// AdminRequestsHandler : fetches data from admin_requests table in db
 func AdminRequestsHandler(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	// fetches data from admin_requests table in db
-
 	var response Response
-	var admin_requests []AdminRequest
+	var adminRequests []AdminRequest
 
 	if IsAdmin(w, r) == true {
-		DB.db.Find(&admin_requests)
-		json, err := json.Marshal(admin_requests)
+		DB.db.Find(&adminRequests)
+		json, err := json.Marshal(adminRequests)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

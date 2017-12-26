@@ -15,6 +15,7 @@ var cookieHandler = securecookie.New(
 	securecookie.GenerateRandomKey(64),
 	securecookie.GenerateRandomKey(32))
 
+// SetCookieHandler : Set Cookies when a user signs-in
 func SetCookieHandler(googTok *GoogleToken, w http.ResponseWriter) {
 
 	if encoded, err := cookieHandler.Encode("googCookie", googTok); err == nil {
@@ -28,6 +29,7 @@ func SetCookieHandler(googTok *GoogleToken, w http.ResponseWriter) {
 	}
 }
 
+// ReadCookieHandler : Read the cookie
 func ReadCookieHandler(w http.ResponseWriter, r *http.Request) (googTok GoogleToken) {
 	if cookie, err := r.Cookie("googCookie"); err == nil {
 		if err = cookieHandler.Decode("googCookie", cookie.Value, &googTok); err != nil {
@@ -37,6 +39,7 @@ func ReadCookieHandler(w http.ResponseWriter, r *http.Request) (googTok GoogleTo
 	return googTok
 }
 
+// ClearCookieHandler : Clear cookies
 func ClearCookieHandler(w http.ResponseWriter) {
 
 	cookie := &http.Cookie{

@@ -6,7 +6,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	
+
 	"github.com/codeskyblue/go-sh"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" // Driver for sqlite
 
@@ -14,21 +14,20 @@ import (
 
 )
 
+// IsAdmin : Read cookie and check db if email exists in admins table
 func IsAdmin(w http.ResponseWriter, r *http.Request) (isAdminFlag bool) {
 
-	// read cookie and check db if email exists in admins table
-
 	googTok := ReadCookieHandler(w, r)
-
 	var admin Admin
 
 	if DB.db.Where("email = ?", googTok.Email).First(&admin).RecordNotFound() {
 		return false
-	} else {
-		return true
 	}
+
+	return true
 }
 
+// AdminIndex :
 func AdminIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	if IsAdmin(w, r) != true {
@@ -41,31 +40,31 @@ func AdminIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 }
 
+
+// AcceptAdminRequest : Lets admin accept request to give a user admin privilege
 func AcceptAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	// lets admin accept request to give a user admin privilege
-
 	var response Response
-	var admin_request AdminRequest
+	var adminRequest AdminRequest
 	var admin Admin
 
 	if IsAdmin(w, r) {
 
 		// gives admin privilege to user by adding entry to admins table
 		// while deleting entry from admin_requests table
-		if DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
+		if DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&adminRequest).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to accept, request does not exists",
 			}
 		} else {
-			DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request)
+			DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&adminRequest)
 			admin = Admin{
-				Name:  admin_request.Name,
-				Email: admin_request.Email,
+				Name:  adminRequest.Name,
+				Email: adminRequest.Email,
 			}
 			DB.db.Create(&admin)
-			DB.db.Delete(&admin_request)
+			DB.db.Delete(&adminRequest)
 
 			response = Response{
 				true,
@@ -92,23 +91,22 @@ func AcceptAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 }
 
+// RejectAdminRequest : :Lets admin reject request to give a user admin privilege
 func RejectAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	// lets admin reject request to give a user admin privilege
-
 	var response Response
-	var admin_request AdminRequest
+	var adminRequest AdminRequest
 
 	if IsAdmin(w, r) == true {
 
 		// deletes entry from admin_requests table
-		if DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&admin_request).RecordNotFound() {
+		if DB.db.Where("admin_request_id = ?", ps.ByName("id")).First(&adminRequest).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to delete, request does not exists",
 			}
 		} else {
-			DB.db.Where("admin_request_id = ?", ps.ByName("id")).Delete(&admin_request)
+			DB.db.Where("admin_request_id = ?", ps.ByName("id")).Delete(&adminRequest)
 			response = Response{
 				true,
 				"Admin request successfully rejected",
@@ -133,9 +131,8 @@ func RejectAdminRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Pa
 
 }
 
+// RevokeAdminPrivilege : Lets admin revoke admin privileges of fellow admin
 func RevokeAdminPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	// lets admin revoke admin privileges of fellow admin
 
 	var response Response
 	var admin Admin
@@ -175,20 +172,20 @@ func RevokeAdminPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter.
 
 }
 
+
+// AcceptAccessRequest : Lets admin accept access request
+// copies user's ssh key to destination server
+// request contains IP Address of the server
+// to which access needs to be granted
 func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	// lets admin accept access request
-	// copies user's ssh key to destination server
-
-	// request contains IP Address of the server
-	// to which access needs to be granted
 	type Receive struct {
 		IP string `json:"ip"`
 	}
 
 	var receive Receive
 	var response Response
-	var access_request AccessRequest
+	var accessRequest AccessRequest
 	var access Access
 
 	decoder := json.NewDecoder(r.Body)
@@ -202,7 +199,7 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 		// gives access privilege to user by adding entry to accesses table
 		// executes shell script which copies user's ssh key to desired dest server over ssh
 		// while deleting entry from access_requests table
-		if DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
+		if DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&accessRequest).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to accept, request does not exists",
@@ -220,19 +217,19 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 			} else {
 
-				DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&access_request)
+				DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&accessRequest)
 
 				// execute shell script to copy ssh key to specified server over ssh
-				sh.Command("./scripts/copy_key_to_server.sh", receive.IP, access_request.SshKey).Run()
+				sh.Command("./scripts/copy_key_to_server.sh", receive.IP, accessRequest.SSHKey).Run()
 
 				access = Access{
-					Name:   access_request.Name,
-					Email:  access_request.Email,
+					Name:   accessRequest.Name,
+					Email:  accessRequest.Email,
 					IP:     receive.IP,
-					SshKey: access_request.SshKey,
+					SSHKey: accessRequest.SSHKey,
 				}
 				DB.db.Create(&access)
-				DB.db.Delete(&access_request)
+				DB.db.Delete(&accessRequest)
 
 				response = Response{
 					true,
@@ -263,23 +260,22 @@ func AcceptAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 }
 
+// RejectAccessRequest : Lets admin reject access request
 func RejectAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
-	// lets admin reject access request
-
 	var response Response
-	var access_request AccessRequest
+	var accessRequest AccessRequest
 
 	if IsAdmin(w, r) == true {
 
 		// deletes entry from access_requests table
-		if DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&access_request).RecordNotFound() {
+		if DB.db.Where("access_request_id = ?", ps.ByName("id")).First(&accessRequest).RecordNotFound() {
 			response = Response{
 				false,
 				"Unable to delete, request does not exists",
 			}
 		} else {
-			DB.db.Where("access_request_id = ?", ps.ByName("id")).Delete(&access_request)
+			DB.db.Where("access_request_id = ?", ps.ByName("id")).Delete(&accessRequest)
 			response = Response{
 				true,
 				"Access request successfully rejected",
@@ -304,9 +300,8 @@ func RejectAccessRequest(w http.ResponseWriter, r *http.Request, ps httprouter.P
 
 }
 
+// RevokeAccessPrivilege : Lets admin revoke access privileges of users
 func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-
-	// lets admin revoke access privileges of users
 
 	var response Response
 	var access Access
@@ -326,6 +321,7 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 			status, _ := sh.Command("./scripts/test_connection.sh", access.IP).Output()
 
 			if !bytes.Equal(status, []byte("ok\n")) {
+
 				response = Response{
 					false,
 					"Can't connect using ssh, check if destination server has been set up correctly",
@@ -336,9 +332,8 @@ func RevokeAccessPrivilege(w http.ResponseWriter, r *http.Request, ps httprouter
 				log.Printf("Access privilege revoked. Name: %v | Email: %v | From: %v", access.Name, access.Email, access.IP)
 
 				DB.db.Where("access_id = ?", ps.ByName("id")).Delete(&access)
-
 				// execute shell script to remove ssh key from the specified server
-				sh.Command("./scripts/remove_key_from_server.sh", access.IP, access.SshKey).Run()
+				sh.Command("./scripts/remove_key_from_server.sh", access.IP, access.SSHKey).Run()
 
 				response = Response{
 					true,

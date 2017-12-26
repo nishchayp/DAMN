@@ -8,23 +8,19 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-/*
-** migrates and creates tables in data base
-** registers functions with routes
-** opens up port and serves the app
- */
 
 var err error
+// DB : Database struct
 var DB Database
 
+// Run : migrates and creates tables in data base
+// registers functions with routes
+// opens up port and serves the app
 func Run() {
 
 	defer DB.db.Close()
 
-	DB.db.AutoMigrate(&AccessRequest{})
-	DB.db.AutoMigrate(&AdminRequest{})
-	DB.db.AutoMigrate(&Admin{})
-	DB.db.AutoMigrate(&Access{})
+	DB.db.AutoMigrate(&AccessRequest{} , &Access{} , &AdminRequest{} , &Admin{})
 
 	router := httprouter.New()
 
