@@ -2,9 +2,11 @@ package app
 
 import (
 	"encoding/json"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/julienschmidt/httprouter"
 	"net/http"
+
+	_ "github.com/jinzhu/gorm/dialects/sqlite" //Driver for SQLite
+	"github.com/julienschmidt/httprouter"
+
 )
 
 /*

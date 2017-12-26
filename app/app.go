@@ -1,10 +1,11 @@
 package app
 
 import (
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
+
+	_ "github.com/jinzhu/gorm/dialects/mysql" // Driver for MySQL
+	"github.com/julienschmidt/httprouter"
 )
 
 /*

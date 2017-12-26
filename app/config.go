@@ -3,12 +3,14 @@ package app
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"golang.org/x/oauth2"
-	"golang.org/x/oauth2/google"
 	"io/ioutil"
 	"log"
+
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // Driver for SQLite
+
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 )
 
 /*

@@ -1,9 +1,10 @@
 package app
 
 import (
-	"github.com/gorilla/securecookie"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/securecookie"
 )
 
 /*

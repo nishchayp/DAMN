@@ -4,13 +4,16 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/julienschmidt/httprouter"
-	"golang.org/x/oauth2"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // Driver for SQLite
+
+	"github.com/julienschmidt/httprouter"
+	"golang.org/x/oauth2"
+
 )
 
 /*

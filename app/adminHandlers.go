@@ -3,12 +3,15 @@ package app
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/codeskyblue/go-sh"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/julienschmidt/httprouter"
 	"html/template"
 	"log"
 	"net/http"
+	
+	"github.com/codeskyblue/go-sh"
+	_ "github.com/jinzhu/gorm/dialects/sqlite" // Driver for sqlite
+
+	"github.com/julienschmidt/httprouter"
+
 )
 
 func IsAdmin(w http.ResponseWriter, r *http.Request) (isAdminFlag bool) {
