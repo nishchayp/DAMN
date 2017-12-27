@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/iecse/DAMN/app"
+	"github.com/nishchayp/DAMN/app"
 )
 
 func main() {
